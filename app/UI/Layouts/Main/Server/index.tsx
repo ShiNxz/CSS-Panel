@@ -3,7 +3,7 @@ import { Image } from '@nextui-org/image'
 import { Card, CardBody } from '@nextui-org/card'
 import { ExtServer } from '@/pages/api/servers'
 import { Progress } from '@nextui-org/progress'
-import { IconCopy, IconServer, IconShield, IconShieldX } from '@tabler/icons-react'
+import { IconCopy, IconPlayerPlay, IconServer, IconShield, IconShieldX } from '@tabler/icons-react'
 import { Tooltip } from '@nextui-org/tooltip'
 import { toast } from 'react-hot-toast'
 import Link from 'next/link'
@@ -99,7 +99,7 @@ const Server = ({ name, address, map, players, maxPlayers, percentage, VAC, game
 									variant='solid'
 									size='sm'
 								>
-									<IconServer size={16} />
+									<IconPlayerPlay size={16} />
 									Connect
 								</Button>
 							</Link>

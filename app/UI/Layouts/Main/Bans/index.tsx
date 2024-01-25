@@ -1,14 +1,17 @@
+'use client'
+
 import type { API_BANS, ExtBan } from '@/pages/api/bans'
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from '@nextui-org/table'
 import { useCallback, useMemo, useState } from 'react'
-import { Spinner } from '@nextui-org/spinner'
 import { Pagination } from '@nextui-org/pagination'
+import { Progress } from '@nextui-org/progress'
+import { Spinner } from '@nextui-org/spinner'
+import { Tooltip } from '@nextui-org/tooltip'
 import { User } from '@nextui-org/user'
 import { Chip } from '@nextui-org/chip'
 import fetcher from '@/utils/fetcher'
 import useSWR from 'swr'
-import Status from '../DataTable/Status'
-import { Progress } from '@nextui-org/progress'
+import Status from './Status'
 
 const BansTable = () => {
 	const [page, setPage] = useState(1)
@@ -17,8 +20,6 @@ const BansTable = () => {
 	const { data, isLoading } = useSWR<API_BANS>(`/api/bans?page=${page}&rows=${rowsPerPage}`, fetcher, {
 		keepPreviousData: true,
 	})
-
-	console.log(data)
 
 	const pages = useMemo(() => {
 		return data?.count ? Math.ceil(data.count / rowsPerPage) : 0
@@ -42,9 +43,28 @@ const BansTable = () => {
 				return Status(item.status)
 
 			case 'reason':
-				return <p className='text-xs font-light '>{item.reason.slice(0, 15)}</p>
+				return (
+					<Tooltip
+						content={item.reason}
+						showArrow
+					>
+						<div className='text-xs font-light'>{item.reason.slice(0, 25)}</div>
+					</Tooltip>
+				)
 
 			case 'duration':
+				return (
+					<Chip
+						color='primary'
+						size='sm'
+						variant='flat'
+						radius='sm'
+					>
+						{item.duration === 0 ? 'Permanent' : `${item.duration} minutes`}
+					</Chip>
+				)
+
+			case 'timeLeft':
 				const duration = item.duration
 				if (duration === 0) {
 					return (
@@ -52,6 +72,7 @@ const BansTable = () => {
 							color='danger'
 							size='sm'
 							variant='flat'
+							radius='sm'
 						>
 							Permanent
 						</Chip>
@@ -65,9 +86,11 @@ const BansTable = () => {
 					((currentDate.getTime() - startDate.getTime()) / (endDate.getTime() - startDate.getTime())) * 100
 				)
 
+				const color = percentage < 50 ? 'warning' : percentage >= 100 ? 'success' : 'primary'
+
 				return (
 					<Progress
-						color='primary'
+						color={color}
 						value={percentage}
 						isStriped
 					/>
@@ -103,24 +126,24 @@ const BansTable = () => {
 
 	return (
 		<Table
-			aria-label='Example table with client async pagination'
 			topContent={
 				<div className='text-start'>
 					<h1 className='text-2xl font-bold'>Bans</h1>
-					<p className='text-sm font-normal'>total: {data?.count || ''}</p>
+					<code className='text-sm font-normal'>total: {data?.count || ''}</code>
 				</div>
 			}
 			bottomContent={
 				pages > 0 ? (
 					<div className='flex w-full justify-center'>
 						<Pagination
-							isCompact
-							showControls
-							showShadow
 							color='primary'
 							page={page}
 							total={pages}
 							onChange={(page) => setPage(page)}
+							size='sm'
+							isCompact
+							showControls
+							showShadow
 						/>
 					</div>
 				) : null
@@ -131,6 +154,7 @@ const BansTable = () => {
 				<TableColumn key='status'>Status</TableColumn>
 				<TableColumn key='reason'>Reason</TableColumn>
 				<TableColumn key='duration'>Duration</TableColumn>
+				<TableColumn key='timeLeft'>Time left</TableColumn>
 			</TableHeader>
 			<TableBody
 				items={data?.results ?? []}

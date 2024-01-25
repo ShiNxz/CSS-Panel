@@ -6,8 +6,8 @@ interface SA_Admin extends RowDataPacket {
 	player_name: string
 	flags: string
 	immunity: string
-	server_id?: string
-	ends?: string
+	server_id?: string | null
+	ends?: string | null
 	created: Date
 }
 
@@ -30,7 +30,6 @@ interface SA_Mute extends RowDataPacket {
 	id: number
 	player_steamid?: string
 	player_name?: string
-	player_ip?: string
 	admin_steamid: string
 	admin_name: string
 	reason: string

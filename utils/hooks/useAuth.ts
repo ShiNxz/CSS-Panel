@@ -11,6 +11,7 @@ const useAuth = (): AuthHook => {
 
 	return {
 		user: error || !data ? null : data.user,
+		admin: error || !data ? null : data.admin,
 		isLoading,
 	}
 }
@@ -18,6 +19,7 @@ const useAuth = (): AuthHook => {
 type AuthHook = {
 	isLoading: boolean
 	user: IAuth['user'] | null
+	admin: IAuth['admin'] | null
 }
 
 export const handleLogout = async () => {

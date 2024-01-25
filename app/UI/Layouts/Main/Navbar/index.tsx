@@ -2,6 +2,7 @@
 
 import User from './User'
 import ThemeSwitch from './Theme'
+import settingsStore from '@/utils/stores/settings.store'
 import { Link } from '@nextui-org/link'
 import { useState } from 'react'
 import {
@@ -14,8 +15,9 @@ import {
 	NavbarMenuItem,
 } from '@nextui-org/navbar'
 
-const Navbar = () => {
+const Navbar = ({ children }: { children: React.ReactNode }) => {
 	const [isMenuOpen, setIsMenuOpen] = useState(false)
+	const settings = settingsStore((state) => state.settings)
 
 	const menuItems = ['Dashboard']
 
@@ -31,9 +33,7 @@ const Navbar = () => {
 					aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
 					className='sm:hidden'
 				/>
-				<NavbarBrand>
-					<p className='font-bold text-black'>ACME</p>
-				</NavbarBrand>
+				<NavbarBrand>{children}</NavbarBrand>
 			</NavbarContent>
 
 			<NavbarContent

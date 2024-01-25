@@ -11,7 +11,7 @@ const fields = [
 	'reason',
 	'duration',
 	'ends',
-	'created',
+	'created', // ! check if this is correct
 	'server_id',
 	'status',
 ]

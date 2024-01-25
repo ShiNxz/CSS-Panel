@@ -5,6 +5,11 @@ import { useRouter } from 'next/navigation'
 import { Toaster } from 'react-hot-toast'
 import { ThemeProvider } from 'next-themes'
 import THEMES from '@/themes'
+import settingsStore from '../utils/stores/settings.store'
+import useSWR from 'swr'
+import fetcher from '@/utils/fetcher'
+import { Settings } from '@/utils/schemas/settings'
+import { useEffect } from 'react'
 
 export interface ProvidersProps {
 	children: React.ReactNode
@@ -12,6 +17,14 @@ export interface ProvidersProps {
 
 const Providers = ({ children }: ProvidersProps) => {
 	const router = useRouter()
+
+	const { data } = useSWR<Settings>('/api/settings', fetcher)
+
+	const setSettings = settingsStore((state) => state.setSettings)
+
+	useEffect(() => {
+		if (data) setSettings(data)
+	}, [data, setSettings])
 
 	return (
 		<NextUIProvider navigate={router.push}>

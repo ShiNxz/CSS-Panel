@@ -8,7 +8,7 @@ import { cn } from '@nextui-org/system'
 const iconClasses = 'text-xl text-default-500 pointer-events-none flex-shrink-0'
 
 const User = () => {
-	const { user } = useAuth()
+	const { user, admin } = useAuth()
 
 	return user ? (
 		<Dropdown>
@@ -19,10 +19,10 @@ const User = () => {
 						isBordered: true,
 						src: user.photos[0].value,
 						radius: 'sm',
-						className: 'mr-1'
+						className: 'mr-1',
 					}}
-					className='transition-transform'
-					description='Server Admin'
+					className='transition-transform mr-4'
+					description={admin?.flags ? admin?.flags : 'Player'}
 					name={user.displayName}
 					classNames={{
 						name: 'text-default-900 font-medium',

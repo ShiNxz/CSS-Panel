@@ -9,6 +9,7 @@ const Status = (value: ExtBan['status']) => {
 					color='danger'
 					size='sm'
 					variant='flat'
+					radius='sm'
 				>
 					Active
 				</Chip>
@@ -19,6 +20,7 @@ const Status = (value: ExtBan['status']) => {
 					color='success'
 					size='sm'
 					variant='flat'
+					radius='sm'
 				>
 					Expired
 				</Chip>
@@ -29,6 +31,7 @@ const Status = (value: ExtBan['status']) => {
 					color='secondary'
 					size='sm'
 					variant='flat'
+					radius='sm'
 				>
 					Removed
 				</Chip>
@@ -39,6 +42,7 @@ const Status = (value: ExtBan['status']) => {
 					color='secondary'
 					size='sm'
 					variant='flat'
+					radius='sm'
 				>
 					Unknown
 				</Chip>

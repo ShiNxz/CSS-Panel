@@ -1,5 +1,5 @@
 import type { ResultSetHeader } from 'mysql2'
-import type { SA_Server } from '@/utils/types/db/simpleadmin'
+import type { DB_Count, SA_Server } from '@/utils/types/db/simpleadmin'
 import db from '@/utils/lib/Mysql'
 
 const Servers = {
@@ -56,6 +56,15 @@ const Servers = {
 		} catch (err) {
 			console.error(`[DB] Error while deleting server: ${err}`)
 			return false
+		}
+	},
+	count: async (): Promise<number> => {
+		try {
+			const [rows] = await db.query<DB_Count[]>('SELECT COUNT(*) FROM `sa_admins`')
+			return rows?.[0]?.['COUNT(*)']
+		} catch (err) {
+			console.error(`[DB] Error while counting admins: ${err}`)
+			return 0
 		}
 	},
 }

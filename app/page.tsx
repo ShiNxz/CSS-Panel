@@ -1,37 +1,18 @@
-'use client'
-
-import type { ExtServer } from '@/pages/api/servers'
-import { Spinner } from '@nextui-org/spinner'
-import { toast } from 'react-hot-toast'
-import Server from './UI/Layouts/Main/Server'
-import useSWR from 'swr'
-import fetcher from '@/utils/fetcher'
-import Header from './UI/Layouts/Main/Header'
 import BansTable from './UI/Layouts/Main/Bans'
+import MutesTable from './UI/Layouts/Main/Mutes'
+import StatsGrid from './UI/Layouts/Main/Stats/Grid'
+import Servers from './UI/Layouts/Main/Servers'
+import SSRHeader from './UI/Layouts/Main/Header/SSR'
 
-const Home = () => {
-	const { data, isLoading } = useSWR<ExtServer[]>('/api/servers', fetcher, {
-		onError: (error) => toast.error(error),
-	})
-
+const Home = async () => {
 	return (
 		<>
-			<Header />
-			<div className='grid xl:grid-cols-3 gap-4 flex-wrap items-center'>
-				{isLoading ? (
-					<Spinner classNames={{ base: 'mx-auto col-span-3' }} />
-				) : (
-					data &&
-					data.map((server) => (
-						<Server
-							{...server}
-							key={server.address}
-						/>
-					))
-				)}
-			</div>
+			<SSRHeader />
+			<Servers />
+			<StatsGrid />
 			<div className='grid grid-cols-2 gap-6'>
 				<BansTable />
+				<MutesTable />
 			</div>
 		</>
 	)

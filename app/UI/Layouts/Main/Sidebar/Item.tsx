@@ -22,7 +22,7 @@ const Item = ({ name, icon: Icon, path }: Route) => {
 				{active && (
 					<motion.span
 						layoutId='underline'
-						className={`absolute left-0 h-full w-1`}
+						className={`absolute left-0 h-full w-1 [box-shadow:_0_0_10px_hsl(var(--css-primary))]`}
 						style={{
 							backgroundColor: 'hsl(var(--css-primary))',
 						}}

@@ -1,17 +1,24 @@
 import type { Metadata } from 'next'
-import { fontAssistant, fontRoboto } from '@/config/fonts'
+import { fontRoboto } from '@/config/fonts'
+import query from '@/utils/functions/db'
+import Layout from './UI/Layouts/Main'
 import Providers from './providers'
 import clsx from 'clsx'
-import Layout from './UI/Layouts/Main'
 
 import './styles/globals.scss'
 
-export const metadata: Metadata = {
-	title: {
-		default: 'CS2',
-		template: `%s - 'CS2'`,
-	},
-	description: 'CS2',
+export const generateMetadata = async (): Promise<Metadata> => {
+	const title = await query.settings.getByKey('title')
+	const keywords = await query.settings.getByKey('keywords')
+
+	return {
+		title: {
+			default: title,
+			template: `%s - ${title}`,
+		},
+		description: title,
+		keywords
+	}
 }
 
 const RootLayout = ({ children }: { children: React.ReactNode }) => {
