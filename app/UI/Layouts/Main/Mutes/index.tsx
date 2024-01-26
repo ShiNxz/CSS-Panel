@@ -140,7 +140,6 @@ const MutesTable = () => {
 
 	return (
 		<Table
-			aria-label='Example table with client async pagination'
 			topContent={
 				<div className='text-start'>
 					<h1 className='text-2xl font-bold'>Mutes</h1>

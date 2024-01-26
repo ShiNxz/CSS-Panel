@@ -1,3 +1,5 @@
+import { z } from "zod"
+
 /**
  * - `@css/reservation` # Reserved slot access.
  * - `@css/generic` # Generic admin.

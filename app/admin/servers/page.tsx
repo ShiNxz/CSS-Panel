@@ -3,17 +3,17 @@
 import { Card, CardBody, CardHeader } from '@nextui-org/card'
 import { Button } from '@nextui-org/button'
 import { IconPlus } from '@tabler/icons-react'
-import AdminsTable from './settings/UI/Admins/Table'
-import useManageAdminsStore from './settings/UI/Admins/store'
-import AdminModal from './settings/UI/Admins/Modal'
+import ServersTable from './Table'
+import useManageServersStore from './store'
+import ServerModal from './Modal'
 
-const ManageAdmins = () => {
-	const setOpen = useManageAdminsStore((state) => state.setOpen)
+const ManageServers = () => {
+	const setOpen = useManageServersStore((state) => state.setOpen)
 
 	return (
 		<Card>
 			<CardHeader className='text-2xl font-medium flex flex-row justify-between'>
-				Manage Admins
+				Manage Servers
 				<Button
 					size='sm'
 					variant='flat'
@@ -21,15 +21,15 @@ const ManageAdmins = () => {
 					onClick={() => setOpen(true)}
 				>
 					<IconPlus />
-					Add new Admin
+					Add new server
 				</Button>
 			</CardHeader>
 			<CardBody>
-				<AdminsTable />
+				<ServersTable />
 			</CardBody>
-			<AdminModal />
+			<ServerModal />
 		</Card>
 	)
 }
 
-export default ManageAdmins
+export default ManageServers

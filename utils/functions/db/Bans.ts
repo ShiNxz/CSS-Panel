@@ -1,4 +1,4 @@
-import type { ResultSetHeader } from 'mysql2'
+import type { ResultSetHeader, RowDataPacket } from 'mysql2'
 import type { DB_Count, SA_Ban } from '@/utils/types/db/simpleadmin'
 import db from '@/utils/lib/Mysql'
 
@@ -16,10 +16,12 @@ const fields = [
 	'status',
 ]
 
+interface SA_BansDB extends SA_Ban, RowDataPacket {}
+
 const Bans = {
 	getAll: async (page: number, limit: number): Promise<SA_Ban[]> => {
 		try {
-			const [rows] = await db.query<SA_Ban[]>(
+			const [rows] = await db.query<SA_BansDB[]>(
 				`SELECT * FROM \`sa_bans\` LIMIT ${limit} OFFSET ${(page - 1) * limit}`
 			)
 			return rows
@@ -30,7 +32,7 @@ const Bans = {
 	},
 	getById: async (banId: number): Promise<SA_Ban | null> => {
 		try {
-			const [rows] = await db.query<SA_Ban[]>('SELECT * FROM `sa_bans` WHERE id = ?', [banId])
+			const [rows] = await db.query<SA_BansDB[]>('SELECT * FROM `sa_bans` WHERE id = ?', [banId])
 			if (!rows.length || rows.length < 1) return null
 			return rows[0]
 		} catch (err) {

@@ -1,17 +1,17 @@
 import type { RowDataPacket } from 'mysql2'
 
-interface SA_Admin extends RowDataPacket {
-	id: number
+interface SA_Admin {
+	id?: number
 	player_steamid: string
 	player_name: string
 	flags: string
 	immunity: string
 	server_id?: string | null
 	ends?: string | null
-	created: Date
+	created?: string
 }
 
-interface SA_Ban extends RowDataPacket {
+interface SA_Ban {
 	id: number
 	player_steamid?: string
 	player_name?: string
@@ -26,7 +26,7 @@ interface SA_Ban extends RowDataPacket {
 	status: 'ACTIVE' | 'UNBANNED' | 'EXPIRED' | ''
 }
 
-interface SA_Mute extends RowDataPacket {
+interface SA_Mute {
 	id: number
 	player_steamid?: string
 	player_name?: string
@@ -41,7 +41,7 @@ interface SA_Mute extends RowDataPacket {
 	status: 'ACTIVE' | 'UNMUTED' | 'EXPIRED' | ''
 }
 
-interface SA_Server extends RowDataPacket {
+interface SA_Server {
 	id: number
 	address: string
 	hostname: string

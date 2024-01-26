@@ -2,7 +2,7 @@ import useAuth, { handleLogin, handleLogout } from '@/utils/hooks/useAuth'
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from '@nextui-org/dropdown'
 import { Button } from '@nextui-org/button'
 import { User as NextUIUser } from '@nextui-org/user'
-import { Icon360 } from '@tabler/icons-react'
+import { Icon360, IconLogout } from '@tabler/icons-react'
 import { cn } from '@nextui-org/system'
 
 const iconClasses = 'text-xl text-default-500 pointer-events-none flex-shrink-0'
@@ -30,11 +30,8 @@ const User = () => {
 					}}
 				/>
 			</DropdownTrigger>
-			<DropdownMenu
-				variant='faded'
-				aria-label='Dropdown menu with description'
-			>
-				<DropdownItem
+			<DropdownMenu variant='faded'>
+				{/* <DropdownItem
 					key='new'
 					shortcut='⌘N'
 					description='Create a new file'
@@ -58,16 +55,16 @@ const User = () => {
 					startContent={<Icon360 className={iconClasses} />}
 				>
 					Edit file
-				</DropdownItem>
+				</DropdownItem> */}
 				<DropdownItem
-					key='delete'
+					key='logout'
 					className='text-danger'
 					color='danger'
-					shortcut='⌘⇧D'
-					description='Permanently delete the file'
-					startContent={<Icon360 className={cn(iconClasses, 'text-danger')} />}
+					description='Logout from your steam account'
+					startContent={<IconLogout className={cn(iconClasses, 'text-danger')} />}
+					onClick={handleLogout}
 				>
-					Delete file
+					Logout
 				</DropdownItem>
 			</DropdownMenu>
 		</Dropdown>

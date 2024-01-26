@@ -13,7 +13,7 @@ const StatsGrid = () => {
 	})
 
 	return (
-		<div className='grid grid-cols-4 gap-6'>
+		<div className='grid grid-cols-5 gap-6'>
 			<StatsBox
 				title='Total Admins'
 				value={data?.admins || 0}
@@ -28,6 +28,11 @@ const StatsGrid = () => {
 				title='Total Bans'
 				value={data?.bans || 0}
 				icon={IconCloudLock}
+			/>
+			<StatsBox
+				title='Total Mutes'
+				value={data?.mutes || 0}
+				icon={IconMicrophoneOff}
 			/>
 			<StatsBox
 				title='Total Mutes'

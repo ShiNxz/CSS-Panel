@@ -1,4 +1,4 @@
-import type { ResultSetHeader } from 'mysql2'
+import type { ResultSetHeader, RowDataPacket } from 'mysql2'
 import type { DB_Count, SA_Mute } from '@/utils/types/db/simpleadmin'
 import db from '@/utils/lib/Mysql'
 
@@ -16,10 +16,12 @@ const fields = [
 	'type',
 ]
 
+interface SA_MutesDB extends SA_Mute, RowDataPacket {}
+
 const Mutes = {
 	getAll: async (page: number, limit: number): Promise<SA_Mute[]> => {
 		try {
-			const [rows] = await db.query<SA_Mute[]>(
+			const [rows] = await db.query<SA_MutesDB[]>(
 				`SELECT * FROM \`sa_mutes\` LIMIT ${limit} OFFSET ${(page - 1) * limit}`
 			)
 			return rows
@@ -30,7 +32,7 @@ const Mutes = {
 	},
 	getById: async (muteId: number): Promise<SA_Mute | null> => {
 		try {
-			const [rows] = await db.query<SA_Mute[]>('SELECT * FROM `sa_mutes` WHERE id = ?', [muteId])
+			const [rows] = await db.query<SA_MutesDB[]>('SELECT * FROM `sa_mutes` WHERE id = ?', [muteId])
 			if (!rows.length || rows.length < 1) return null
 			return rows[0]
 		} catch (err) {

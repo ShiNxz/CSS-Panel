@@ -1,7 +1,7 @@
 import type { CSSP_Log, CSSP_LogExtended } from '@/utils/types/db/panel'
 import { From64ToUser } from 'steam-api-sdk'
 import db from '@/utils/lib/Mysql'
-import Admins from './Admins'
+import Admins from '../Admins'
 
 const Logs = {
 	getAll: async (): Promise<CSSP_Log[]> => {

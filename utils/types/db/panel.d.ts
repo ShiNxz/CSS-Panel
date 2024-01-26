@@ -26,7 +26,6 @@ interface CSSP_LogExtended {
 	title: string
 	message: string
 	aid: number
-	constructor: undefined
 	admin: Admin | null
 	time: Date
 }

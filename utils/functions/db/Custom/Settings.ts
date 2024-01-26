@@ -10,11 +10,11 @@ const Settings = {
 			const dbSettings: ISettings = rows.reduce((acc, curr) => {
 				// Check the key type and cast the value to the correct type
 				if (curr.key === 'debugMode' || curr.key === 'earlyAccessFeatures') {
-					acc[curr.key as keyof ISettings] = curr.value === '1' ? true : false
+					acc[curr.key] = curr.value === '1' ? true : false
 					return acc
 				}
 
-				acc[curr.key as keyof ISettings] = curr.value
+				acc[curr.key] = curr.value as string
 
 				return acc
 			}, {} as ISettings)

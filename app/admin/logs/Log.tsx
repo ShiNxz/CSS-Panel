@@ -4,7 +4,7 @@ import { Image } from '@nextui-org/image'
 import { Divider } from '@nextui-org/divider'
 import { formatDistanceToNow } from 'date-fns'
 
-const Log = ({ admin, message, title, time }: CSSP_LogExtended) => {
+const Log: React.FC<CSSP_LogExtended> = ({ admin, message, title, time }) => {
 	return (
 		<Card fullWidth>
 			{admin && (

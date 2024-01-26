@@ -1,7 +1,6 @@
 'use client'
 
 import type { Settings } from '@/utils/schemas/settings'
-import type { CSSP_LogExtended } from '@/utils/types/db/panel'
 import { Spinner } from '@nextui-org/spinner'
 import { toast } from 'react-hot-toast'
 import { Tabs, Tab } from '@nextui-org/tabs'
@@ -16,19 +15,15 @@ import axios from 'axios'
 import tabs from './tabs'
 
 const Settings = () => {
-	const { data, isLoading } = useSWR<{ settings: Settings; logs: CSSP_LogExtended[] }>('/api/admin/settings', fetcher)
+	const { data, isLoading } = useSWR<Settings>('/api/admin/settings', fetcher)
 	const [tab, setTab] = useQueryState(tabs[0].id)
 
 	const settings = adminSettingsStore((state) => state.settings)
 	const setSettings = adminSettingsStore((state) => state.setSettings)
-	const setLogs = adminSettingsStore((state) => state.setLogs)
 
 	useEffect(() => {
-		if (data) {
-			setSettings(data.settings)
-			setLogs(data.logs)
-		}
-	}, [isLoading, data, setSettings, setLogs])
+		if (data) setSettings(data)
+	}, [isLoading, data, setSettings])
 
 	const [isLoadingForm, setIsLoadingForm] = useState(false)
 
@@ -73,7 +68,7 @@ const Settings = () => {
 						<Button
 							className='mt-4'
 							color='danger'
-							onClick={() => (data ? setSettings(data.settings) : undefined)}
+							onClick={() => (data ? setSettings(data) : undefined)}
 							isLoading={isLoadingForm || isLoading}
 							fullWidth
 						>

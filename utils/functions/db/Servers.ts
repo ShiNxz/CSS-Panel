@@ -1,11 +1,15 @@
-import type { ResultSetHeader } from 'mysql2'
+import type { ResultSetHeader, RowDataPacket } from 'mysql2'
 import type { DB_Count, SA_Server } from '@/utils/types/db/simpleadmin'
+import { z } from 'zod'
 import db from '@/utils/lib/Mysql'
+import serverSchema from '@/utils/schemas/serverSchema'
+
+interface SA_ServerDB extends SA_Server, RowDataPacket {}
 
 const Servers = {
 	getAll: async (): Promise<SA_Server[]> => {
 		try {
-			const [rows] = await db.query<SA_Server[]>('SELECT * FROM `sa_servers`')
+			const [rows] = await db.query<SA_ServerDB[]>('SELECT * FROM `sa_servers`')
 			return rows
 		} catch (err) {
 			console.error(`[DB] Error while getting all servers: ${err}`)
@@ -14,7 +18,7 @@ const Servers = {
 	},
 	getById: async (serverId: number): Promise<SA_Server | null> => {
 		try {
-			const [rows] = await db.query<SA_Server[]>('SELECT * FROM `sa_servers` WHERE id = ?', [serverId])
+			const [rows] = await db.query<SA_ServerDB[]>('SELECT * FROM `sa_servers` WHERE id = ?', [serverId])
 			if (!rows.length || rows.length < 1) return null
 			return rows[0]
 		} catch (err) {
@@ -22,7 +26,7 @@ const Servers = {
 			return null
 		}
 	},
-	create: async ({ hostname, address }: SA_Server): Promise<number | null> => {
+	create: async ({ hostname, address }: z.infer<typeof serverSchema>): Promise<number | null> => {
 		try {
 			const [rows] = await db.query<ResultSetHeader>(
 				'INSERT INTO `sa_servers` (hostname, address) VALUES(?, ?)',
@@ -32,7 +36,7 @@ const Servers = {
 			return rows.insertId
 		} catch (err) {
 			console.error(`[DB] Error while creating server: ${err}`)
-			return null
+			throw err
 		}
 	},
 	update: async ({ id, hostname, address }: SA_Server): Promise<boolean> => {
@@ -45,7 +49,7 @@ const Servers = {
 			return rows.affectedRows > 0
 		} catch (err) {
 			console.error(`[DB] Error while updating server: ${err}`)
-			return false
+			throw err
 		}
 	},
 	delete: async (serverId: number): Promise<boolean> => {
@@ -55,7 +59,7 @@ const Servers = {
 			return rows.affectedRows > 0
 		} catch (err) {
 			console.error(`[DB] Error while deleting server: ${err}`)
-			return false
+			throw err
 		}
 	},
 	count: async (): Promise<number> => {

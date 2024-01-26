@@ -5,16 +5,17 @@ import { Spinner } from '@nextui-org/spinner'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 
-const AdminCheck = ({ children }: { children: React.ReactNode }) => {
+const AdminCheck: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 	const { admin, isLoading } = useAuth()
 	const router = useRouter()
 
 	useEffect(() => {
-		if (isLoading) return
-		if (!admin) router.push('/')
+		if (!isLoading) {
+			if (!admin) router.push('/')
+		}
 	}, [admin, isLoading, router])
 
-	return isLoading ? <Spinner /> : admin ? children : <>No Access</>
+	return isLoading ? <Spinner /> : admin ? <>{children}</> : <>No Access</>
 }
 
 export default AdminCheck

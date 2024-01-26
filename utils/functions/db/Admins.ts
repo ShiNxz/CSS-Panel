@@ -1,13 +1,15 @@
-import type { ResultSetHeader } from 'mysql2'
+import type { ResultSetHeader, RowDataPacket } from 'mysql2'
 import type { DB_Count, SA_Admin } from '@/utils/types/db/simpleadmin'
 import db from '@/utils/lib/Mysql'
 
 const fields = ['player_steamid', 'player_name', 'flags', 'immunity', 'server_id', 'ends']
 
+interface SA_AdminDB extends SA_Admin, RowDataPacket {}
+
 const Admins = {
-	getAll: async (page: number, limit: number): Promise<SA_Admin[]> => {
+	getAll: async (page: number = 1, limit: number = 100000): Promise<SA_Admin[]> => {
 		try {
-			const [rows] = await db.query<SA_Admin[]>(
+			const [rows] = await db.query<SA_AdminDB[]>(
 				`SELECT * FROM \`sa_admins\` LIMIT ${limit} OFFSET ${(page - 1) * limit}`
 			)
 			return rows
@@ -18,7 +20,7 @@ const Admins = {
 	},
 	getById: async (adminId: number): Promise<SA_Admin | null> => {
 		try {
-			const [rows] = await db.query<SA_Admin[]>('SELECT * FROM `sa_admins` WHERE id = ?', [adminId])
+			const [rows] = await db.query<SA_AdminDB[]>('SELECT * FROM `sa_admins` WHERE id = ?', [adminId])
 			if (!rows.length || rows.length < 1) return null
 			return rows[0]
 		} catch (err) {
@@ -28,7 +30,7 @@ const Admins = {
 	},
 	getBySteam64: async (steam64: string): Promise<SA_Admin | null> => {
 		try {
-			const [rows] = await db.query<SA_Admin[]>('SELECT * FROM `sa_admins` WHERE player_steamid = ?', [steam64])
+			const [rows] = await db.query<SA_AdminDB[]>('SELECT * FROM `sa_admins` WHERE player_steamid = ?', [steam64])
 			if (!rows.length || rows.length < 1) return null
 			return rows[0]
 		} catch (err) {
@@ -36,45 +38,41 @@ const Admins = {
 			return null
 		}
 	},
-	create: async ({
-		player_steamid,
-		player_name,
-		flags,
-		immunity,
-		server_id,
-		ends,
-	}: SA_Admin): Promise<number | null> => {
+	getByServerId: async (serverId: number): Promise<SA_Admin[]> => {
+		try {
+			const [rows] = await db.query<SA_AdminDB[]>('SELECT * FROM `sa_admins` WHERE server_id = ?', [serverId])
+			return rows
+		} catch (err) {
+			console.error(`[DB] Error while getting all admins: ${err}`)
+			return []
+		}
+	},
+	create: async ({ player_steamid, player_name, flags, immunity, server_id }: SA_Admin): Promise<number | null> => {
 		try {
 			const [rows] = await db.query<ResultSetHeader>(
-				`INSERT INTO 'sa_admins' (${fields.join(', ')}) VALUES (${fields.map(() => '?').join(', ')})`,
-				[player_steamid, player_name, flags, immunity, server_id, ends]
+				`INSERT INTO \`sa_admins\` (${fields.join(', ')}, created) VALUES (${fields
+					.map(() => '?')
+					.join(', ')}, NOW())`,
+				[player_steamid, player_name, flags, immunity, server_id, null]
 			)
 
 			return rows.insertId
 		} catch (err) {
 			console.error(`[DB] Error while creating sa_admins: ${err}`)
-			return null
+			throw err
 		}
 	},
-	update: async ({
-		id,
-		player_steamid,
-		player_name,
-		flags,
-		immunity,
-		server_id,
-		ends,
-	}: SA_Admin): Promise<boolean> => {
+	update: async ({ id, player_steamid, player_name, flags, immunity, server_id }: SA_Admin): Promise<boolean> => {
 		try {
 			const [rows] = await db.query<ResultSetHeader>(
-				`UPDATE 'sa_admins' SET ${fields.map((f) => `${f} = ?`).join(', ')} WHERE id = ?`,
-				[player_steamid, player_name, flags, immunity, server_id, ends, id]
+				`UPDATE \`sa_admins\` SET ${fields.map((f) => `${f} = ?`).join(', ')} WHERE id = ?`,
+				[player_steamid, player_name, flags, immunity, server_id, null, id]
 			)
 
 			return rows.affectedRows > 0
 		} catch (err) {
 			console.error(`[DB] Error while updating admin: ${err}`)
-			return false
+			throw err
 		}
 	},
 	delete: async (adminId: number): Promise<boolean> => {
@@ -84,7 +82,7 @@ const Admins = {
 			return rows.affectedRows > 0
 		} catch (err) {
 			console.error(`[DB] Error while deleting admin: ${err}`)
-			return false
+			throw err
 		}
 	},
 	count: async (): Promise<number> => {

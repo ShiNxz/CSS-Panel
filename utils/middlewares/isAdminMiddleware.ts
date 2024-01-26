@@ -1,4 +1,5 @@
-import { NextApiRequest, NextApiResponse } from 'next'
+import type { NextApiRequest, NextApiResponse } from 'next'
+import type { Flag } from '../types/db/css'
 import query from '@/func/db'
 
 /**

@@ -5,11 +5,10 @@ import { Tabs, Tab } from '@nextui-org/tabs'
 
 const AdminTabs = () => {
 	const pathname = usePathname()
-	console.log(pathname)
 
 	return (
 		<Tabs
-			aria-label='Settings tabs'
+			aria-label='Admin tabs'
 			selectedKey={pathname}
 			items={TABS}
 		>
@@ -30,6 +29,10 @@ const TABS = [
 	{
 		path: '/admin',
 		title: 'Manage Admins',
+	},
+	{
+		path: '/admin/servers',
+		title: 'Manage Servers',
 	},
 	{
 		path: '/admin/bans',

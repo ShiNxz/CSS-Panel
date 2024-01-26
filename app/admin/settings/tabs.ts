@@ -1,7 +1,6 @@
 import SeoSettings from './UI/Seo'
 import AdvancedSettings from './UI/Advanced'
 import DesignSettings from './UI/Design'
-import Logs from './UI/Logs'
 
 const tabs = [
 	{
@@ -18,11 +17,6 @@ const tabs = [
 		id: 'advanced',
 		label: 'Advanced Settings',
 		content: AdvancedSettings,
-	},
-	{
-		id: 'logs',
-		label: 'Logs',
-		content: Logs,
 	},
 ]
 
