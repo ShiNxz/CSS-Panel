@@ -48,7 +48,7 @@ const AdminModal = () => {
 			player_name: edit ? edit.player_name : '',
 			player_steamid: edit ? edit.player_steamid : '',
 			server_id: edit ? Number(edit.server_id) : 0,
-			flags: edit ? edit.flags : '@css/root',
+			flags: edit ? (edit.flags as string) : '@css/root',
 			immunity: edit ? edit.immunity : '0',
 		},
 		validate: zodResolver(adminSchema),

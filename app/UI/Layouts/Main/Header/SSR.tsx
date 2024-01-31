@@ -8,9 +8,9 @@ const SSRHeader = async () => {
 
 	return (
 		<Header
-			image={headerImage}
-			html={headerCodeHTML}
-			css={headerCodeCSS}
+			image={headerImage || ''}
+			html={headerCodeHTML || ''}
+			css={headerCodeCSS || ''}
 		/>
 	)
 }

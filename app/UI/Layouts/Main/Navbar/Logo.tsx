@@ -4,10 +4,10 @@ import isUrl from '@/utils/functions/isURL'
 const Logo = async () => {
 	const logo = await query.settings.getByKey('logo')
 
-	if (isUrl(logo))
+	if (isUrl(logo || ''))
 		return (
 			<img
-				src={logo}
+				src={logo || ''}
 				alt='Logo'
 				className='h-10'
 			/>

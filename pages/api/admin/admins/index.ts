@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
+import type { Flag } from '@/utils/types/db/css'
 import query from '@/utils/functions/db'
 import router from '@/lib/Router'
 import adminSchema from '@/utils/schemas/adminSchema'
@@ -20,11 +21,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 			const { flags, immunity, player_name, player_steamid, server_id } = adminSchema.parse(req.body)
 
 			const admin = await query.admins.create({
-				flags,
+				flags: flags as Flag,
 				immunity: immunity.toString() ?? 0,
 				player_name,
 				player_steamid,
-				server_id: server_id?.toString() ?? null,
+				server_id: server_id ?? null,
 			})
 
 			// todo send a rcon command to update the admin on the servers
