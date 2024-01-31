@@ -2,12 +2,29 @@ import type { CSSP_Setting } from '@/utils/types/db/panel'
 import db from '@/utils/lib/Mysql'
 import settingsSchema, { GetDefaultSettings, type Settings as ISettings } from '@/utils/schemas/settings'
 
+const publicSettings: (keyof ISettings)[] = [
+	'title',
+	'description',
+	'keywords',
+	'theme',
+	'logo',
+	'headerImage',
+	'headerCodeHTML',
+	'headerCodeCSS',
+]
+
 const Settings = {
-	getAll: async (): Promise<ISettings> => {
+	/**
+	 * Get all settings from the database
+	 * @param safe If true, it will return only the public settings
+	 */
+	getAll: async (safe = true): Promise<ISettings> => {
 		try {
 			const [rows] = await db.query<CSSP_Setting[]>('SELECT * FROM `cssp_settings`')
-
 			const dbSettings: ISettings = rows.reduce((acc, curr) => {
+				// If safe is true, it will return only the public settings
+				if (safe && !publicSettings.includes(curr.key as keyof ISettings)) return acc
+
 				// Check the key type and cast the value to the correct type
 				if (curr.key === 'debugMode' || curr.key === 'earlyAccessFeatures') {
 					acc[curr.key] = curr.value === '1' ? true : false
@@ -31,8 +48,10 @@ const Settings = {
 			return GetDefaultSettings()
 		}
 	},
-	getByKey: async <K extends keyof ISettings>(key: K): Promise<ISettings[K]> => {
+	getByKey: async <K extends keyof ISettings>(key: K, safe = true): Promise<ISettings[K] | null> => {
 		try {
+			if (safe && !publicSettings.includes(key)) return null
+
 			const [rows] = await db.query<CSSP_Setting[]>(`SELECT * FROM \`cssp_settings\` WHERE \`key\` LIKE '${key}'`)
 
 			if (!rows.length || rows.length < 1) {

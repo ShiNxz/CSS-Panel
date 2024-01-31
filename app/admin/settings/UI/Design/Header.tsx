@@ -11,7 +11,6 @@ const HeaderDesign = () => {
 
 	return (
 		<div className='flex flex-col gap-4'>
-			<h2>Header</h2>
 			<Input
 				label='Header Image URL'
 				value={settings.headerImage}

@@ -11,7 +11,7 @@ const AdminCheck: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
 	useEffect(() => {
 		if (!isLoading) {
-			if (!admin) router.push('/')
+			if (!admin || admin.flags !== '@css/root') router.push('/')
 		}
 	}, [admin, isLoading, router])
 

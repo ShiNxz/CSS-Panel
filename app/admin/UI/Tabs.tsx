@@ -28,6 +28,10 @@ export default AdminTabs
 const TABS = [
 	{
 		path: '/admin',
+		title: 'Statistics',
+	},
+	{
+		path: '/admin/admins',
 		title: 'Manage Admins',
 	},
 	{

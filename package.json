@@ -3,8 +3,9 @@
 	"version": "0.0.1",
 	"private": true,
 	"scripts": {
+		"pull": "git pull",
 		"dev": "next dev",
-		"build": "next build",
+		"build": "git pull && next build",
 		"start": "next start",
 		"lint": "next lint"
 	},
@@ -27,6 +28,7 @@
 		"@nextui-org/navbar": "2.0.27",
 		"@nextui-org/pagination": "^2.0.26",
 		"@nextui-org/progress": "^2.0.24",
+		"@nextui-org/select": "^2.1.20",
 		"@nextui-org/slider": "^2.2.5",
 		"@nextui-org/snippet": "2.0.30",
 		"@nextui-org/spinner": "^2.0.24",
@@ -59,6 +61,7 @@
 		"swr": "^2.2.4",
 		"tailwind-variants": "^0.1.18",
 		"zod": "^3.22.4",
+		"zod-validation-error": "^3.0.0",
 		"zustand": "^4.5.0"
 	},
 	"devDependencies": {

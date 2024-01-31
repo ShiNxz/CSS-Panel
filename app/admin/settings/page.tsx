@@ -16,7 +16,7 @@ import tabs from './tabs'
 
 const Settings = () => {
 	const { data, isLoading } = useSWR<Settings>('/api/admin/settings', fetcher)
-	const [tab, setTab] = useQueryState(tabs[0].id)
+	const [tab, setTab] = useQueryState('tab')
 
 	const settings = adminSettingsStore((state) => state.settings)
 	const setSettings = adminSettingsStore((state) => state.setSettings)

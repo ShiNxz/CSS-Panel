@@ -1,12 +1,13 @@
 import type { RowDataPacket } from 'mysql2'
+import type { Flag } from './css'
 
 interface SA_Admin {
 	id?: number
 	player_steamid: string
 	player_name: string
-	flags: string
+	flags: Flag
 	immunity: string
-	server_id?: string | null
+	server_id?: number | null
 	ends?: string | null
 	created?: string
 }

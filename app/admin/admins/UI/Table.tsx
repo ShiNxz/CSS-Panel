@@ -48,7 +48,7 @@ const AdminsTable = () => {
 		setDelete(null)
 	}
 
-	const loadingState = isLoading || data?.admins?.length === 0 ? 'loading' : 'idle'
+	const loadingState = isLoading || !data?.servers || data?.admins?.length === 0 ? 'loading' : 'idle'
 
 	const renderCell = useCallback((item: SA_Admin, columnKey: any) => {
 		switch (columnKey) {
@@ -67,8 +67,8 @@ const AdminsTable = () => {
 
 			case 'server': {
 				if (!item.server_id) return <>ALL</>
-
-				const server = data?.servers.find((s) => s.id === Number(item.server_id || 0))
+				console.log(data?.servers)
+				const server = data?.servers.find((s) => s.id == (item.server_id || 0))
 
 				return (
 					<Chip

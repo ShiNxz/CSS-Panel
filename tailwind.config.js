@@ -1,5 +1,7 @@
 import { nextui } from '@nextui-org/theme'
 import THEMES from './themes'
+import { bluePurpleDark, bluePurpleLight } from './themes/bluePurple'
+import { orangeDark, orangeLight } from './themes/orangeRed'
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -15,7 +17,12 @@ module.exports = {
 	darkMode: 'class',
 	plugins: [
 		nextui({
-			themes: THEMES,
+			themes: {
+				'light-bluePurple-theme': bluePurpleLight,
+				'dark-bluePurple-theme': bluePurpleDark,
+				'light-orange-theme': orangeLight,
+				'dark-orange-theme': orangeDark,
+			},
 			prefix: 'css',
 		}),
 	],

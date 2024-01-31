@@ -1,4 +1,7 @@
 import { createPool } from 'mysql2/promise'
+import CheckENV from './Env'
+
+CheckENV()
 
 const db = createPool({
 	host: process.env.DB_HOST,

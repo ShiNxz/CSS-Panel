@@ -13,15 +13,17 @@ export const generateMetadata = async (): Promise<Metadata> => {
 
 	return {
 		title: {
-			default: title,
+			default: title || '',
 			template: `%s - ${title}`,
 		},
 		description: title,
-		keywords
+		keywords,
 	}
 }
 
-const RootLayout = ({ children }: { children: React.ReactNode }) => {
+const RootLayout = async ({ children }: { children: React.ReactNode }) => {
+	const theme = await query.settings.getByKey('theme')
+
 	return (
 		<html
 			lang='en'

@@ -1,3 +1,4 @@
+import { Flag } from '@/utils/types/db/css'
 import { IconBan, IconDashboard, IconMicrophone, IconServer, type Icon } from '@tabler/icons-react'
 
 const ROUTES: Route[] = [
@@ -26,6 +27,7 @@ const ROUTES: Route[] = [
 		path: '/admin',
 		icon: IconServer,
 		admin: true,
+		flag: '@css/root',
 	},
 ]
 
@@ -34,6 +36,7 @@ export interface Route {
 	name: string
 	icon: Icon
 	admin?: boolean
+	flag?: Flag
 }
 
 export default ROUTES

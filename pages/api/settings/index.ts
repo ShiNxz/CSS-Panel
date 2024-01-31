@@ -9,7 +9,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
 	switch (method) {
 		case 'GET': {
-			const settings = await query.settings.getAll()
+			const settings = await query.settings.getAll(true)
 
 			return res.status(200).json(settings)
 		}

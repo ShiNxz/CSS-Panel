@@ -1,6 +1,6 @@
+import { THEMES_OPTIONS } from '@/themes'
+import { Select, SelectItem } from '@nextui-org/select'
 import adminSettingsStore from '../../store'
-import { Input, Textarea } from '@nextui-org/input'
-import HeaderDesign from './Header'
 
 const DesignSettings = () => {
 	const settings = adminSettingsStore((state) => state.settings)
@@ -9,7 +9,24 @@ const DesignSettings = () => {
 
 	return (
 		<div className='flex flex-col gap-4'>
-			<HeaderDesign />
+			<Select
+				label='Panel theme'
+				variant='bordered'
+				placeholder='Select a theme'
+				selectedKeys={[settings.theme]}
+				className='max-w-xs'
+				onChange={(theme) => setSettings({ ...settings, theme: theme.target.value })}
+				disabled={isFormLoading}
+			>
+				{THEMES_OPTIONS.map((option) => (
+					<SelectItem
+						key={option.value}
+						value={option.value}
+					>
+						{option.name}
+					</SelectItem>
+				))}
+			</Select>
 		</div>
 	)
 }
