@@ -5,7 +5,7 @@
 	"scripts": {
 		"pull": "git pull",
 		"dev": "next dev",
-		"build": "git pull && next build",
+		"build": "next build",
 		"start": "next start",
 		"lint": "next lint"
 	},
