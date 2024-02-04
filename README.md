@@ -45,13 +45,17 @@ pnpm start
 head to `http://localhost:3000` and login with your steam account,
 then head to `http://localhost:3000/admin` and change the panel settings.
 
-Detailed installation instructions can be found in the [docs](https://docs.csspanel.dev/docs/guides/install).
+Detailed installation instructions can be found in the [docs](https://docs.csspanel.dev/docs/quickstart).
 
 ## Features Roadmap & Progress
 
 -   [x] Servers - take the servers data from the database and display it in the panel.
     -   [x] Servers status as table / cards
-    -   [ ] Show each server players in the panel, with the ability to kick, ban, mute, gag, etc as a context menu.
+    -   [ ] Modal - Show each server players in the panel, and also their admin status and flags.
+		-	[ ] ability to change the map, restart the server, etc.
+		-	[ ] ability to kick, ban, mute, gag, etc as a context menu
+		-	[ ] rcon command with response (@root)
+		-	[ ] chat window with the ability to send messages to the server and see the server chat (using the chatlogger plugin?) and show the map background, also add context menu for the chat messages players.
 -   [x] Bans - take the bans data from the database and display it in the panel.
     -   [x] Bans status as table
 -   [x] Comms - take the comms data from the database and display it in the panel.=
@@ -79,6 +83,8 @@ Detailed installation instructions can be found in the [docs](https://docs.csspa
         -   [x] Design settings - change the panel design, colors, etc.
         -   [ ] Discord settings - add discord webhook for bans, comms, etc. from the panel.
         -   [x] Advanced settings - debug mode, early access, etc.
+        -   [ ] Customization settings - add custom css, js, etc.
+        -   [ ] Networks - add different networks like discord, steam, etc. to the panel and add them as a contact method in the panel and footer icons.
 
 ## Links
 

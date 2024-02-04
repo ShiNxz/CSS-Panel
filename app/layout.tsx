@@ -9,6 +9,7 @@ import './styles/globals.scss'
 
 export const generateMetadata = async (): Promise<Metadata> => {
 	const title = await query.settings.getByKey('title')
+	const description = await query.settings.getByKey('description')
 	const keywords = await query.settings.getByKey('keywords')
 
 	return {
@@ -16,7 +17,7 @@ export const generateMetadata = async (): Promise<Metadata> => {
 			default: title || '',
 			template: `%s - ${title}`,
 		},
-		description: title,
+		description,
 		keywords,
 	}
 }
