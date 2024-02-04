@@ -16,6 +16,7 @@ const ServersSettings = () => {
 				description='The password for the RCON connection to the servers, note that all servers must have the same password for this to work.'
 				type='password'
 			/>
+			{/* todo, send a request to the server to check if the rcon password is able to connect to all of the servers */}
 		</div>
 	)
 }

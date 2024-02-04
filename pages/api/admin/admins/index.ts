@@ -3,11 +3,15 @@ import type { Flag } from '@/utils/types/db/css'
 import query from '@/utils/functions/db'
 import router from '@/lib/Router'
 import adminSchema from '@/utils/schemas/adminSchema'
+import isAdminMiddleware from '@/utils/middlewares/isAdminMiddleware'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 	await router.run(req, res)
 
 	const { method } = req
+
+	const isAdmin = await isAdminMiddleware(req, res, ['@css/root'])
+	if (!isAdmin) return
 
 	switch (method) {
 		case 'GET': {
