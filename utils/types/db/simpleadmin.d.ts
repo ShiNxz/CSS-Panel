@@ -46,6 +46,7 @@ interface SA_Server {
 	id: number
 	address: string
 	hostname: string
+	rcon?: string
 }
 
 interface DB_Count extends RowDataPacket {

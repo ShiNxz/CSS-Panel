@@ -43,12 +43,17 @@ const ServerModal = () => {
 		initialValues: {
 			address: edit ? edit.address : '',
 			hostname: edit ? edit.hostname : '',
+			rcon: edit ? edit.rcon : '',
 		},
 		validate: zodResolver(serverSchema),
 	})
 
 	useEffect(() => {
-		form.setValues({ address: edit ? edit.address : '', hostname: edit ? edit.hostname : '' })
+		form.setValues({
+			address: edit ? edit.address : '',
+			hostname: edit ? edit.hostname : '',
+			rcon: edit ? edit.rcon : '',
+		})
 	}, [edit])
 
 	return (
@@ -77,6 +82,15 @@ const ServerModal = () => {
 								errorMessage={form.errors.address}
 								label='Address'
 								placeholder='1.1.1.1:25565'
+								type='text'
+								variant='bordered'
+								disabled={isLoading}
+							/>
+							<Input
+								{...form.getInputProps('rcon')}
+								errorMessage={form.errors.rcon}
+								label='Rcon Password'
+								placeholder='123456789'
 								type='text'
 								variant='bordered'
 								disabled={isLoading}

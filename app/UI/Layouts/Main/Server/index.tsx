@@ -1,15 +1,19 @@
+import type { SafeServerInfo } from '@/pages/api/servers'
 import { Button } from '@nextui-org/button'
 import { Image } from '@nextui-org/image'
 import { Card, CardBody } from '@nextui-org/card'
-import { ExtServer } from '@/pages/api/servers'
 import { Progress } from '@nextui-org/progress'
-import { IconCopy, IconPlayerPlay, IconServer, IconShield, IconShieldX } from '@tabler/icons-react'
+import { IconCopy, IconPlayerPlay, IconShield, IconShieldX } from '@tabler/icons-react'
 import { Tooltip } from '@nextui-org/tooltip'
 import { toast } from 'react-hot-toast'
 import Link from 'next/link'
 
-const Server = ({ name, address, map, players, maxPlayers, percentage, VAC, game }: ExtServer) => {
-	const isFull = players === maxPlayers
+const Server = ({ hostname, address, map, players, maxPlayers, playersPercentage, vac, game, handleOpen }: Props) => {
+	/**
+	 * If the players prop is a number, it means that the server info isn't from RCON
+	 */
+	const isRconStatus = typeof players !== 'number'
+	const isFull = typeof players === 'number' ? players === maxPlayers : players.length === maxPlayers
 
 	const handleConnect = () => (isFull ? toast.error('Server is full!') : open(`steam://connect/${address}`, '_self'))
 
@@ -22,9 +26,9 @@ const Server = ({ name, address, map, players, maxPlayers, percentage, VAC, game
 
 	return (
 		<Card
-			className='border-none bg-background/60 dark:bg-default-100/50 max-w-[610px]'
+			className='border-none bg-content1'
 			shadow='sm'
-			onClick={handleConnect}
+			onClick={isRconStatus ? handleOpen : handleConnect}
 			isBlurred
 			isPressable
 		>
@@ -47,11 +51,11 @@ const Server = ({ name, address, map, players, maxPlayers, percentage, VAC, game
 					<div className='flex flex-col col-span-6 md:col-span-8'>
 						<div className='flex justify-between items-start'>
 							<div className='flex flex-col gap-0'>
-								<h3 className='font-semibold text-foreground/90'>{name}</h3>
+								<h3 className='font-semibold text-foreground/90'>{hostname}</h3>
 								<p className='text-small text-foreground/80'>{game}</p>
 							</div>
 							<Tooltip
-								content={VAC ? 'The server is secured by VAC' : 'Not VAC Secured'}
+								content={vac ? 'The server is secured by VAC' : 'Not VAC Secured'}
 								showArrow
 							>
 								<Button
@@ -61,7 +65,7 @@ const Server = ({ name, address, map, players, maxPlayers, percentage, VAC, game
 									size='sm'
 									isIconOnly
 								>
-									{VAC ? <IconShield size={20} /> : <IconShieldX />}
+									{vac ? <IconShield size={20} /> : <IconShieldX />}
 								</Button>
 							</Tooltip>
 						</div>
@@ -69,13 +73,13 @@ const Server = ({ name, address, map, players, maxPlayers, percentage, VAC, game
 						<div className='flex flex-col mt-3 gap-1'>
 							<Progress
 								color='primary'
-								value={percentage}
+								value={playersPercentage}
 								isStriped
 								size='sm'
 							/>
 							<div className='flex justify-between'>
 								<p className='text-small'>
-									{map} • {players}/{maxPlayers} Players
+									{map} • {isRconStatus ? players.length : players}/{maxPlayers} Players
 								</p>
 							</div>
 						</div>
@@ -109,6 +113,10 @@ const Server = ({ name, address, map, players, maxPlayers, percentage, VAC, game
 			</CardBody>
 		</Card>
 	)
+}
+
+interface Props extends SafeServerInfo {
+	handleOpen: () => void
 }
 
 export default Server

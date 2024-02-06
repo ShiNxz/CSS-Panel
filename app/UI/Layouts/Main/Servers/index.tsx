@@ -1,14 +1,21 @@
 'use client'
 
-import type { ExtServer } from '@/pages/api/servers'
+import type { SafeServerInfo } from '@/pages/api/servers'
 import { Spinner } from '@nextui-org/spinner'
 import { toast } from 'react-hot-toast'
+import { useState } from 'react'
 import fetcher from '@/utils/fetcher'
 import Server from '../Server'
 import useSWR from 'swr'
+import ServerModal from './ServerModal'
 
 const Servers = () => {
-	const { data, isLoading } = useSWR<ExtServer[]>('/api/servers', fetcher, {
+	const [modal, setModal] = useState<{ open: boolean; server: SafeServerInfo | null }>({
+		open: false,
+		server: null,
+	})
+
+	const { data, isLoading } = useSWR<SafeServerInfo[]>('/api/servers', fetcher, {
 		onError: (error) => toast.error(error),
 	})
 
@@ -22,9 +29,15 @@ const Servers = () => {
 					<Server
 						{...server}
 						key={server.address}
+						handleOpen={() => setModal({ open: true, server })}
 					/>
 				))
 			)}
+			<ServerModal
+				open={modal.open}
+				server={modal.server}
+				handleClose={() => setModal((prev) => ({ ...prev, open: false }))}
+			/>
 		</div>
 	)
 }

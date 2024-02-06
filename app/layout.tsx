@@ -23,8 +23,6 @@ export const generateMetadata = async (): Promise<Metadata> => {
 }
 
 const RootLayout = async ({ children }: { children: React.ReactNode }) => {
-	const theme = await query.settings.getByKey('theme')
-
 	return (
 		<html
 			lang='en'
