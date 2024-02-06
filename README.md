@@ -4,7 +4,7 @@ CSSharp Panel - Admin Web Panel for CounterStrikeSharp
 
 CSSharp Panel is a web panel for CounterStrikeSharp that includes many features such as servers management, admins management, ban & comms management, rcon functions and much more, with a modern UI and a lot of customization options.
 
-[Join our Discord](https://discord.gg/r96PSHfNcW) - [View the docs](https://docs.csspanel.dev/) - [Demo website](https://css.next-il.co.il/)
+[Join our Discord](https://discord.gg/r96PSHfNcW) - [View the docs](https://csspanel.dev/) - [Demo website](https://css.next-il.co.il/)
 
 ## Features
 
@@ -45,17 +45,17 @@ pnpm start
 head to `http://localhost:3000` and login with your steam account,
 then head to `http://localhost:3000/admin` and change the panel settings.
 
-Detailed installation instructions can be found in the [docs](https://docs.csspanel.dev/docs/quickstart).
+Detailed installation instructions can be found in the [docs](https://csspanel.dev/docs/quickstart).
 
 ## Features Roadmap & Progress
 
 -   [x] Servers - take the servers data from the database and display it in the panel.
     -   [x] Servers status as table / cards
     -   [ ] Modal - Show each server players in the panel, and also their admin status and flags.
-		-	[ ] ability to change the map, restart the server, etc.
-		-	[ ] ability to kick, ban, mute, gag, etc as a context menu
-		-	[ ] rcon command with response (@root)
-		-	[ ] chat window with the ability to send messages to the server and see the server chat (using the chatlogger plugin?) and show the map background, also add context menu for the chat messages players.
+        -   [ ] ability to change the map, restart the server, etc.
+        -   [ ] ability to kick, ban, mute, gag, etc as a context menu
+        -   [ ] rcon command with response (@root)
+        -   [ ] chat window with the ability to send messages to the server and see the server chat (using the chatlogger plugin?) and show the map background, also add context menu for the chat messages players.
 -   [x] Bans - take the bans data from the database and display it in the panel.
     -   [x] Bans status as table
 -   [x] Comms - take the comms data from the database and display it in the panel.=
@@ -90,5 +90,5 @@ Detailed installation instructions can be found in the [docs](https://docs.csspa
 
 -   [Join the Discord](https://discord.gg/eAZU3guKWU): Ask questions, provide suggestions
 -   [Example Panel](https://css.next-il.co.il/): view a demo panel
--   [Docs](https://docs.csspanel.dev/): Installation instructions
+-   [Docs](https://csspanel.dev/): Installation instructions
 -   [Issues](https://github.com/ShiNxz/CSS-Panel/issues): Raise any issues here
