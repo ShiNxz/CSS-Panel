@@ -55,6 +55,7 @@ const Settings = {
 			const [rows] = await db.query<CSSP_Setting[]>(`SELECT * FROM \`cssp_settings\` WHERE \`key\` LIKE '${key}'`)
 
 			if (!rows.length || rows.length < 1) {
+				console.error(`[DB] Error while getting setting: ${key}`)
 				const defaultSettings = GetDefaultSettings()
 				return defaultSettings[key as keyof ISettings] as ISettings[K]
 			}
