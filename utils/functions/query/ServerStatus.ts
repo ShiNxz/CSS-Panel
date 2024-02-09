@@ -1,6 +1,5 @@
 import { Server } from '@fabricio-191/valve-server-query'
 import PlayerStatus, { type RconPlayer } from './PlayersStatus'
-import query from '../db'
 
 /**
  * Get server info **using the source-query package**
@@ -22,6 +21,15 @@ const GetServerInfo = async (ip: string, port: number, rcon?: string): Promise<S
 
 		const { name, map, game, players, VAC, version } = info
 
+		if (rcon)
+			console.log(
+				`RCON Found for server ${ip}:${port}, the server info will be pulled with RCON.\nNote that you can should consider using our official plugin to get more information and features.\nhttps://github.com/ShiNxz/CSS-Plugin`
+			)
+		else
+			console.log(
+				`RCON not found for server ${ip}:${port}, the server info will be pulled without RCON, this means that players and advanced information modal will not be shown.\nConsider using our official plugin to get more information and features.\nhttps://github.com/ShiNxz/CSS-Plugin`
+			)
+
 		const serverPlayers = rcon ? await PlayerStatus(ip, port, rcon) : null
 		const serverPlayersWithoutIP = serverPlayers
 			? serverPlayers?.map((player) => {
@@ -41,7 +49,7 @@ const GetServerInfo = async (ip: string, port: number, rcon?: string): Promise<S
 			game,
 		}
 	} catch (e) {
-		console.error(`Error getting server info: ${ip}:${port}`, e)
+		console.error(`[Error] getting server info: ${ip}:${port}: ${e}`)
 		return null
 	}
 }

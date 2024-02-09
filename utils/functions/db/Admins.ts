@@ -47,6 +47,19 @@ const Admins = {
 			return []
 		}
 	},
+	getBySteam64AndServerId: async (steam64: string, serverId: number): Promise<SA_Admin | null> => {
+		try {
+			const [rows] = await db.query<SA_AdminDB[]>(
+				'SELECT * FROM `sa_admins` WHERE player_steamid = ? AND server_id = ?',
+				[steam64, serverId]
+			)
+			if (!rows.length || rows.length < 1) return null
+			return rows[0]
+		} catch (err) {
+			console.error(`[DB] Error while getting the admin: ${err}`)
+			return null
+		}
+	},
 	create: async ({ player_steamid, player_name, flags, immunity, server_id }: SA_Admin): Promise<number | null> => {
 		try {
 			const [rows] = await db.query<ResultSetHeader>(

@@ -12,6 +12,7 @@ const settingsSchema = z.object({
 	headerCodeHTML: z.string().optional().default(''),
 	headerCodeCSS: z.string().optional().default(''),
 	earlyAccessFeatures: z.boolean().optional().default(false),
+	serversGrid: z.boolean().optional().default(true),
 })
 
 export type Settings = z.infer<typeof settingsSchema>

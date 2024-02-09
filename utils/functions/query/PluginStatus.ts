@@ -1,5 +1,7 @@
 import { RCON } from '@fabricio-191/valve-server-query'
 
+const CURRENT_VERSION = '1.3.0c'
+
 /**
  * Get the status of the server **using RCON and the custom plugin command (css_query)**
  * - Using the custom plugin that made for the panel
@@ -16,11 +18,20 @@ const PluginStatus = async (ip: string, port: number, password: string): Promise
 
 		const status = await server.exec('css_query')
 
-		console.log(JSON.parse(status))
+		const jsonStatus = JSON.parse(status) as PluginStatus
+		const { pluginVersion } = jsonStatus.server
+
+		if (pluginVersion !== CURRENT_VERSION) {
+			console.warn(
+				`[PluginStatus] The plugin version for ${ip}:${port} is outdated: ${pluginVersion}, the latest version is: ${CURRENT_VERSION}\nDownload the latest version from: https://github.com/ShiNxz/CSS-Plugin`
+			)
+		}
 
 		return JSON.parse(status)
 	} catch (e) {
-		console.error(`Error getting RCON status: ${ip}:${port}`, e)
+		console.error(
+			`[Error] getting Plugin RCON status: ${ip}:${port}: ${e}\nMake sure that the plugin is installed and the RCON is enabled.\nDownload: https://github.com/ShiNxz/CSS-Plugin`
+		)
 		return null
 	}
 }
@@ -30,6 +41,7 @@ export interface PluginServer {
 	players: number
 	maxPlayers: number
 	maps: string[]
+	pluginVersion: string
 }
 
 export interface PluginPlayer {
@@ -43,21 +55,23 @@ export interface PluginPlayer {
 	ping: number
 	team: number
 	clanName: string
-	kills: string[] // currently doesnt work
-	deaths: number // currently doesnt work
+	kills: string
+	deaths: string
+	assists: string
+	headshots: string
+	damage: string
 	score: number
 	roundScore: number
 	roundsWon: number
-	flags: number // currently doesnt work
 	mvps: number
-	connected: number
-	valid: boolean
 	time: number // currently doesnt work
+	avatar: string
+	role?: string // todo after making the roles system
 }
 
 export interface PluginStatus {
 	server: PluginServer
-	users: PluginPlayer[]
+	players: PluginPlayer[]
 }
 
 export default PluginStatus

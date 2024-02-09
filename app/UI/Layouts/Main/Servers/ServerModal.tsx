@@ -11,8 +11,18 @@ import { useCallback } from 'react'
 import useContextMenu from '@/utils/hooks/useContextMenu'
 import ContextMenu from '@/app/UI/General/ContextMenu'
 import Link from 'next/link'
+import useServersStore from './store'
+import useAuth from '@/utils/hooks/useAuth'
 
-const ServerModal = ({ open, server, handleClose }: Props) => {
+const ServerModal = () => {
+	const modal = useServersStore((state) => state.modal)
+	const setModal = useServersStore((state) => state.setModal)
+
+	const { admin } = useAuth()
+
+	const { open, server } = modal
+	const handleClose = () => setModal({ ...modal, open: false })
+
 	const { x, y, open: contextMenuOpen, handleCloseMenu, handleOpen } = useContextMenu()
 
 	const renderCell = useCallback((player: PlayerInfo, columnKey: keyof PlayerInfo) => {
@@ -36,8 +46,12 @@ const ServerModal = ({ open, server, handleClose }: Props) => {
 						<User
 							avatarProps={{ radius: 'lg', src: player.avatar }}
 							name={player.playerName}
+							classNames={{
+								name: 'flex flex-col gap-2',
+							}}
 						>
 							{player.playerName}
+							<span>{player.admin ? '(Admin)' : ''}</span>
 						</User>
 					</Link>
 				)
@@ -53,8 +67,14 @@ const ServerModal = ({ open, server, handleClose }: Props) => {
 					</Link>
 				)
 
-			case 'roundsWon':
-				return <span>{player.roundsWon}</span>
+			case 'kills':
+				return <span>{player.kills || 0}</span>
+
+			case 'deaths':
+				return <span>{player.deaths || 0}</span>
+
+			case 'mvps':
+				return <span>{player.mvps || 0}</span>
 
 			case 'score':
 				return <span>{player.score}</span>
@@ -100,7 +120,9 @@ const ServerModal = ({ open, server, handleClose }: Props) => {
 										<TableColumn key='userId'>#</TableColumn>
 										<TableColumn key='playerName'>Player</TableColumn>
 										<TableColumn key='steam64'>SteamID</TableColumn>
-										<TableColumn key='roundsWon'>Rounds Won</TableColumn>
+										<TableColumn key='kills'>Kills</TableColumn>
+										<TableColumn key='deaths'>Deaths</TableColumn>
+										<TableColumn key='mvps'>MVP</TableColumn>
 										<TableColumn key='score'>Score</TableColumn>
 										<TableColumn key='ping'>Ping</TableColumn>
 									</TableHeader>
@@ -108,7 +130,7 @@ const ServerModal = ({ open, server, handleClose }: Props) => {
 										{(item) => (
 											<TableRow
 												key={item.userId}
-												onContextMenu={handleOpen}
+												onContextMenu={(admin && handleOpen) || undefined}
 											>
 												{(columnKey) => (
 													<TableCell>
@@ -139,43 +161,45 @@ const ServerModal = ({ open, server, handleClose }: Props) => {
 					)
 				}
 			</ModalContent>
-			<ContextMenu
-				open={contextMenuOpen}
-				x={x}
-				y={y}
-				handleCloseMenu={handleCloseMenu}
-				items={[
-					{
-						category: 'Player Actions (Coming Soon!)',
-						items: [
-							{
-								key: 'Kick',
-								description: 'Kick the player from the server',
-								icon: IconBan,
-								color: 'danger',
-							},
-							{
-								key: 'Ban',
-								description: 'Ban the player from the server for specific time',
-								icon: IconBan,
-								color: 'danger',
-							},
-							{
-								key: 'Mute',
-								description: 'Mute the player for specific time',
-								icon: IconBan,
-								color: 'danger',
-							},
-							{
-								key: 'Warn',
-								description: 'Warn the player',
-								icon: IconBan,
-								color: 'warning',
-							},
-						],
-					},
-				]}
-			/>
+			{admin && (
+				<ContextMenu
+					open={contextMenuOpen}
+					x={x}
+					y={y}
+					handleCloseMenu={handleCloseMenu}
+					items={[
+						{
+							category: 'Player Actions (Coming Soon!)',
+							items: [
+								{
+									key: 'Kick',
+									description: 'Kick the player from the server',
+									icon: IconBan,
+									color: 'danger',
+								},
+								{
+									key: 'Ban',
+									description: 'Ban the player from the server for specific time',
+									icon: IconBan,
+									color: 'danger',
+								},
+								{
+									key: 'Mute',
+									description: 'Mute the player for specific time',
+									icon: IconBan,
+									color: 'danger',
+								},
+								{
+									key: 'Warn',
+									description: 'Warn the player',
+									icon: IconBan,
+									color: 'warning',
+								},
+							],
+						},
+					]}
+				/>
+			)}
 		</Modal>
 	)
 }

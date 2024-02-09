@@ -16,6 +16,15 @@ const Servers = {
 			return []
 		}
 	},
+	getAllSafe: async (): Promise<SA_Server[]> => {
+		try {
+			const [rows] = await db.query<SA_ServerDB[]>('SELECT id, hostname, address FROM `sa_servers`')
+			return rows
+		} catch (err) {
+			console.error(`[DB] Error while getting all servers: ${err}`)
+			return []
+		}
+	},
 	getById: async (serverId: number): Promise<SA_Server | null> => {
 		try {
 			const [rows] = await db.query<SA_ServerDB[]>('SELECT * FROM `sa_servers` WHERE id = ?', [serverId])

@@ -11,7 +11,10 @@ const publicSettings: (keyof ISettings)[] = [
 	'headerImage',
 	'headerCodeHTML',
 	'headerCodeCSS',
+	'serversGrid',
 ]
+
+const booleanSettings: (keyof ISettings)[] = ['debugMode', 'earlyAccessFeatures', 'serversGrid']
 
 const Settings = {
 	/**
@@ -26,11 +29,13 @@ const Settings = {
 				if (safe && !publicSettings.includes(curr.key as keyof ISettings)) return acc
 
 				// Check the key type and cast the value to the correct type
-				if (curr.key === 'debugMode' || curr.key === 'earlyAccessFeatures') {
+				if (booleanSettings.includes(curr.key as keyof ISettings)) {
+					// @ts-ignore
 					acc[curr.key] = curr.value === '1' ? true : false
 					return acc
 				}
 
+				// @ts-ignore
 				acc[curr.key] = curr.value as string
 
 				return acc
@@ -60,6 +65,11 @@ const Settings = {
 				console.error(`[DB] Error while getting setting: ${key}`)
 				const defaultSettings = GetDefaultSettings()
 				return defaultSettings[key as keyof ISettings] as ISettings[K]
+			}
+
+			// Check the key type and cast the value to the correct type
+			if (booleanSettings.includes(key)) {
+				return (rows[0].value === '1' ? true : false) as ISettings[K]
 			}
 
 			return rows[0].value as ISettings[K]

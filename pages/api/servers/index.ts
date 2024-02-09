@@ -1,9 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
+import type { SA_Admin } from '@/utils/types/db/simpleadmin'
+import { From64ToUser } from 'steam-api-sdk'
 import GetServerInfo from '@/utils/functions/query/ServerStatus'
 import query from '@/utils/functions/db'
 import router from '@/lib/Router'
 import PluginStatus from '@/utils/functions/query/PluginStatus'
-import { From64ToUser } from 'steam-api-sdk'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 	await router.run(req, res)
@@ -16,23 +17,44 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
 			const servers: (SafeServerInfo | null)[] = await Promise.all(
 				dbServers.map(async (server) => {
-					const { hostname, address, rcon } = server
+					const { id: serverId, hostname, address, rcon } = server
 					const [ip, port] = address.split(':')
 
 					if (rcon) {
-						const { server, users } = (await PluginStatus(ip, Number(port), rcon)) || {}
-						if (!server || !users) return null
+						const { server, players } = (await PluginStatus(ip, Number(port), rcon)) || {}
+						if (!server || !players) return null
 
-						const steamIds = users.map((player) => player.steam64.toString())
-						const steamProfiles = await From64ToUser(steamIds)
+						const newPlayers: PlayerInfo[] = await Promise.all(
+							players.map(async (player) => {
+								const {
+									userId,
+									playerName,
+									steam64,
+									score,
+									roundsWon,
+									ping,
+									avatar,
+									kills,
+									deaths,
+									mvps,
+								} = player
+								const admin = await query.admins.getBySteam64AndServerId(steam64, serverId)
 
-						const newPlayers: PlayerInfo[] = users.map((player) => {
-							const { userId, playerName, steam64, score, roundsWon, ping } = player
-							const profile = steamProfiles?.find((profile) => profile.steamid === steam64.toString())
-							const avatar = profile?.avatarfull || ''
-
-							return { userId, playerName, steam64, score, roundsWon, avatar, ping }
-						})
+								return {
+									userId,
+									playerName,
+									steam64,
+									score,
+									roundsWon,
+									avatar,
+									ping,
+									admin,
+									kills,
+									deaths,
+									mvps,
+								}
+							})
+						)
 
 						const info: SafeServerInfo = {
 							hostname,
@@ -40,10 +62,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 							map: server.map,
 							players: newPlayers,
 							maxPlayers: server.maxPlayers,
-							playersPercentage: Math.round((users.length / server.maxPlayers) * 100),
+							playersPercentage: Math.round((players.length / server.maxPlayers) * 100),
 							vac: true,
 							game: 'Counter-Strike 2',
 						}
+
+						console.log(info)
 
 						return info
 					} else {
@@ -53,14 +77,25 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 						const steamIds = info.serverPlayers?.map((player) => player.steamId64)
 						const steamProfiles = steamIds ? await From64ToUser(steamIds) : []
 
-						const players: PlayerInfo[] | number =
-							info.serverPlayers?.map((player) => {
-								const { id, name, steamId64 } = player
-								const profile = steamProfiles?.find((profile) => profile.steamid === steamId64)
-								const avatar = profile?.avatarfull || ''
+						const players: PlayerInfo[] | number = info.serverPlayers
+							? await Promise.all(
+									info.serverPlayers?.map(async (player) => {
+										const { id, name, steamId64 } = player
+										const profile = steamProfiles?.find((profile) => profile.steamid === steamId64)
+										const avatar = profile?.avatarfull || ''
+										const admin = await query.admins.getBySteam64AndServerId(steamId64, serverId)
 
-								return { userId: id, playerName: name, steam64: steamId64, avatar, ping: 0 }
-							}) || info.players
+										return {
+											userId: id,
+											playerName: name,
+											steam64: steamId64,
+											avatar,
+											ping: 0,
+											admin,
+										}
+									})
+							  )
+							: info.players
 
 						return {
 							hostname,
@@ -102,6 +137,10 @@ export interface PlayerInfo {
 	roundsWon?: number
 	avatar?: string
 	ping?: number
+	admin: SA_Admin | null
+	kills?: string
+	deaths?: string
+	mvps?: number
 }
 
 export default handler
