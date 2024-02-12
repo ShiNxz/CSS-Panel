@@ -11,7 +11,7 @@ const ContextMenu = ({ open, x, y, handleCloseMenu, items }: ContextMenuProps) =
 	return (
 		open && (
 			<motion.div
-				className='w-full max-w-[260px] border-small px-1 py-0.5 rounded-small bg-background/10 backdrop-blur-lg border-default-200 absolute z-[20000]'
+				className='w-full max-w-[260px] border-small px-1 py-0.5 rounded-small bg-background/40 backdrop-blur-lg border-default-200 absolute z-[20000]'
 				style={{
 					left: x,
 					top: y,
@@ -31,7 +31,7 @@ const ContextMenu = ({ open, x, y, handleCloseMenu, items }: ContextMenuProps) =
 							key={category}
 							title={category}
 						>
-							{items.map(({ key, description, icon, color }) => {
+							{items.map(({ key, description, icon, color, onClick }) => {
 								const Icon = icon
 
 								return (
@@ -40,6 +40,10 @@ const ContextMenu = ({ open, x, y, handleCloseMenu, items }: ContextMenuProps) =
 										description={<span className='text-foreground-700'>{description}</span>}
 										startContent={<Icon />}
 										color={color || 'default'}
+										onClick={() => {
+											onClick && onClick()
+											handleCloseMenu()
+										}}
 									>
 										{key}
 									</ListboxItem>
@@ -71,6 +75,7 @@ interface ContextMenuItem {
 	description: string
 	icon: (props: TablerIconsProps) => JSX.Element
 	color?: 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'danger'
+	onClick?: () => void
 }
 
 export default ContextMenu

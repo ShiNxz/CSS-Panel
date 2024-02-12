@@ -1,6 +1,6 @@
 import type { Settings } from '@/utils/schemas/settings'
 import type { RowDataPacket } from 'mysql2'
-import type { SA_Admin } from './simpleadmin'
+import type { SA_Admin } from './plugin'
 import type { IExtendedSteamUser } from 'steam-api-sdk/types'
 
 interface CSSP_Setting extends RowDataPacket {

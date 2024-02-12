@@ -1,13 +1,13 @@
 'use client'
 
-import type { SafeServerInfo } from '@/pages/api/servers'
+import type { SafeServerInfo } from '@/utils/functions/query/ServerQuery'
 import { Spinner } from '@nextui-org/spinner'
 import { toast } from 'react-hot-toast'
 import { useState } from 'react'
 import fetcher from '@/utils/fetcher'
 import Server from './Server'
 import useSWR from 'swr'
-import ServerModal from './ServerModal'
+import ServerModal from './Modal'
 
 const Servers = () => {
 	const [modal, setModal] = useState<{ open: boolean; server: SafeServerInfo | null }>({

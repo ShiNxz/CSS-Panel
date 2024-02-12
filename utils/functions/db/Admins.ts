@@ -1,5 +1,5 @@
 import type { ResultSetHeader, RowDataPacket } from 'mysql2'
-import type { DB_Count, SA_Admin } from '@/utils/types/db/simpleadmin'
+import type { DB_Count, SA_Admin } from '@/utils/types/db/plugin'
 import db from '@/utils/lib/Mysql'
 
 const fields = ['player_steamid', 'player_name', 'flags', 'immunity', 'server_id', 'ends']

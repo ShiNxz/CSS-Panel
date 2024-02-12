@@ -1,4 +1,4 @@
-import type { SafeServerInfo } from '@/pages/api/servers'
+import type { SafeServerInfo } from '@/utils/functions/query/ServerQuery'
 import { create } from 'zustand'
 
 const useServersStore = create<ServersStore>((set) => ({
@@ -7,6 +7,11 @@ const useServersStore = create<ServersStore>((set) => ({
 		server: null,
 	},
 	setModal: (modal) => set({ modal }),
+	chatModal: {
+		open: false,
+		server: null,
+	},
+	setChatModal: (modal) => set({ chatModal: modal }),
 }))
 
 interface ServersStore {
@@ -15,6 +20,11 @@ interface ServersStore {
 		server: SafeServerInfo | null
 	}
 	setModal: (modal: { open: boolean; server: SafeServerInfo | null }) => void
+	chatModal: {
+		open: boolean
+		server: SafeServerInfo | null
+	}
+	setChatModal: (modal: { open: boolean; server: SafeServerInfo | null }) => void
 }
 
 export default useServersStore

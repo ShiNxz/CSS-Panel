@@ -8,10 +8,10 @@ export const metadata: Metadata = {
 
 const RootLayout = ({ children }: { children: React.ReactNode }) => {
 	return (
-		<>
+		<AdminCheck>
 			<AdminTabs />
-			<AdminCheck>{children}</AdminCheck>
-		</>
+			{children}
+		</AdminCheck>
 	)
 }
 

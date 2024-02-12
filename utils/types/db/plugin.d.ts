@@ -49,6 +49,18 @@ interface SA_Server {
 	rcon?: string
 }
 
+// todo check if it also push when using the css_say/say command
+// todo add index to serverId
+interface SA_ChatLog {
+	id: number
+	serverId: string
+	playerSteam64: string
+	playerName: string
+	message: string
+	team: number
+	created: Date
+}
+
 interface DB_Count extends RowDataPacket {
 	'COUNT(*)': number
 }

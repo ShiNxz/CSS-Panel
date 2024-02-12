@@ -1,22 +1,23 @@
 'use client'
 
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { Tabs, Tab } from '@nextui-org/tabs'
 
 const AdminTabs = () => {
 	const pathname = usePathname()
+	const router = useRouter()
 
 	return (
 		<Tabs
-			aria-label='Admin tabs'
+			aria-label='Admin-tabs'
 			selectedKey={pathname}
+			onSelectionChange={(e) => router.push(e as string)}
 			items={TABS}
 		>
 			{(item) => (
 				<Tab
 					key={item.path}
 					title={item.title}
-					href={item.path}
 				/>
 			)}
 		</Tabs>

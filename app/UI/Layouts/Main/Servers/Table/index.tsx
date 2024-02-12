@@ -1,11 +1,8 @@
 'use client'
 
-import type { SafeServerInfo } from '@/pages/api/servers'
+import type { SafeServerInfo } from '@/utils/functions/query/ServerQuery'
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from '@nextui-org/table'
 import { Button } from '@nextui-org/button'
-import { Image } from '@nextui-org/image'
-import { Card, CardBody } from '@nextui-org/card'
-import { Progress } from '@nextui-org/progress'
 import { IconCopy, IconPlayerPlay, IconShield, IconShieldX } from '@tabler/icons-react'
 import { Tooltip } from '@nextui-org/tooltip'
 import { Spinner } from '@nextui-org/spinner'
@@ -15,7 +12,8 @@ import useServersStore from '../store'
 import fetcher from '@/utils/fetcher'
 import Link from 'next/link'
 import useSWR from 'swr'
-import ServerModal from '../ServerModal'
+import ServerModal from '../Modal'
+import ServerChatModal from '../Modal/ServerChatModal'
 
 /**
  * This is a table that shows all the servers, currently it uses swr to fetch **all the data** from the server
@@ -65,20 +63,23 @@ const ServersTable = () => {
 
 			case 'vac':
 				return (
-					<Tooltip
-						content={vac ? 'The server is secured by VAC' : 'Not VAC Secured'}
-						showArrow
-					>
-						<Button
-							className='text-default-900/60 data-[hover]:bg-foreground/10 -translate-y-2 translate-x-2'
-							variant='light'
-							radius='full'
-							size='sm'
-							isIconOnly
+					vac !== null &&
+					((
+						<Tooltip
+							content={vac ? 'The server is secured by VAC' : 'Not VAC Secured'}
+							showArrow
 						>
-							{vac ? <IconShield size={20} /> : <IconShieldX />}
-						</Button>
-					</Tooltip>
+							<Button
+								className='text-default-900/60 data-[hover]:bg-foreground/10 -translate-y-2 translate-x-2'
+								variant='light'
+								radius='full'
+								size='sm'
+								isIconOnly
+							>
+								{vac ? <IconShield size={20} /> : <IconShieldX />}
+							</Button>
+						</Tooltip>
+					) || <></>)
 				)
 
 			case 'actions':
@@ -137,20 +138,29 @@ const ServersTable = () => {
 					loadingContent={<Spinner />}
 					loadingState={loadingState}
 				>
-					{(server) => (
-						<TableRow
-							key={server.address}
-							className='cursor-pointer'
-							onClick={() => handleOpen(server)}
-						>
-							{(columnKey) => (
-								<TableCell>{renderCell(server, columnKey as keyof SafeServerInfo)}</TableCell>
-							)}
+					{error ? (
+						<TableRow>
+							<TableCell colSpan={6}>
+								<div className='text-center'>Error fetching servers</div>
+							</TableCell>
 						</TableRow>
+					) : (
+						(server) => (
+							<TableRow
+								key={server.address}
+								className='cursor-pointer'
+								onClick={() => handleOpen(server)}
+							>
+								{(columnKey) => (
+									<TableCell>{renderCell(server, columnKey as keyof SafeServerInfo)}</TableCell>
+								)}
+							</TableRow>
+						)
 					)}
 				</TableBody>
 			</Table>
 			<ServerModal />
+			<ServerChatModal />
 		</>
 	)
 }

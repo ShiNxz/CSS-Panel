@@ -1,4 +1,4 @@
-import type { SafeServerInfo } from '@/pages/api/servers'
+import type { SafeServerInfo } from '@/utils/functions/query/ServerQuery'
 import { Button } from '@nextui-org/button'
 import { Image } from '@nextui-org/image'
 import { Card, CardBody } from '@nextui-org/card'
@@ -54,20 +54,22 @@ const Server = ({ hostname, address, map, players, maxPlayers, playersPercentage
 								<h3 className='font-semibold text-foreground/90'>{hostname}</h3>
 								<p className='text-small text-foreground/80'>{game}</p>
 							</div>
-							<Tooltip
-								content={vac ? 'The server is secured by VAC' : 'Not VAC Secured'}
-								showArrow
-							>
-								<Button
-									className='text-default-900/60 data-[hover]:bg-foreground/10 -translate-y-2 translate-x-2'
-									variant='light'
-									radius='full'
-									size='sm'
-									isIconOnly
+							{vac !== null && (
+								<Tooltip
+									content={vac ? 'The server is secured by VAC' : 'Not VAC Secured'}
+									showArrow
 								>
-									{vac ? <IconShield size={20} /> : <IconShieldX />}
-								</Button>
-							</Tooltip>
+									<Button
+										className='text-default-900/60 data-[hover]:bg-foreground/10 -translate-y-2 translate-x-2'
+										variant='light'
+										radius='full'
+										size='sm'
+										isIconOnly
+									>
+										{vac ? <IconShield size={20} /> : <IconShieldX />}
+									</Button>
+								</Tooltip>
+							)}
 						</div>
 
 						<div className='flex flex-col mt-3 gap-1'>

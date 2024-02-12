@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import type { SA_Mute } from '@/utils/types/db/simpleadmin'
+import type { SA_Mute } from '@/utils/types/db/plugin'
 import query from '@/utils/functions/db'
 import router from '@/lib/Router'
 import queryParamsSchema from '@/utils/schemas/queryParams'

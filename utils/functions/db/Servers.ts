@@ -1,5 +1,5 @@
 import type { ResultSetHeader, RowDataPacket } from 'mysql2'
-import type { DB_Count, SA_Server } from '@/utils/types/db/simpleadmin'
+import type { DB_Count, SA_Server } from '@/utils/types/db/plugin'
 import { z } from 'zod'
 import db from '@/utils/lib/Mysql'
 import serverSchema from '@/utils/schemas/serverSchema'

@@ -5,6 +5,7 @@ const useContextMenu = <T>() => {
 		open: false,
 		x: 0,
 		y: 0,
+		info: undefined,
 	})
 
 	const handleOpen = (e: React.MouseEvent<HTMLDivElement, globalThis.MouseEvent>, info?: T) => {
@@ -33,6 +34,7 @@ const useContextMenu = <T>() => {
 		open: playerContextMenu.open,
 		handleCloseMenu,
 		handleOpen,
+		info: playerContextMenu.info,
 	}
 }
 

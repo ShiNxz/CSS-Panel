@@ -1,4 +1,4 @@
-import type { SA_Server } from '@/utils/types/db/simpleadmin'
+import type { SA_Server } from '@/utils/types/db/plugin'
 import { create } from 'zustand'
 
 const useManageServersStore = create<Store>((set) => ({

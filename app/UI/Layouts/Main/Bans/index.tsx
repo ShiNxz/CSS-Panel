@@ -25,7 +25,7 @@ const BansTable = () => {
 		return data?.count ? Math.ceil(data.count / rowsPerPage) : 0
 	}, [data?.count, rowsPerPage])
 
-	const loadingState = isLoading || data?.results.length === 0 ? 'loading' : 'idle'
+	const loadingState = isLoading ? 'loading' : 'idle'
 
 	const renderCell = useCallback((item: ExtBan, columnKey: any) => {
 		switch (columnKey) {

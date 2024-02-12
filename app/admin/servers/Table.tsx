@@ -1,6 +1,6 @@
 'use client'
 
-import type { SA_Server } from '@/utils/types/db/simpleadmin'
+import type { SA_Server } from '@/utils/types/db/plugin'
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from '@nextui-org/table'
 import { useCallback } from 'react'
 import { Spinner } from '@nextui-org/spinner'

@@ -1,5 +1,6 @@
 import SoloServer from './Server/SoloServer'
-import ServerModal from './ServerModal'
+import ServerChatModal from './Modal/ServerChatModal'
+import ServerModal from './Modal'
 import query from '@/utils/functions/db'
 
 const Servers = async () => {
@@ -14,6 +15,7 @@ const Servers = async () => {
 				/>
 			))}
 			<ServerModal />
+			<ServerChatModal />
 		</div>
 	)
 }
