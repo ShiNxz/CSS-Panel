@@ -7,4 +7,7 @@ export default router
 	.use((req, res, next) => {
 		next()
 	})
-	.get(path, p.authenticate('steam', (err: any) => console.log(err)))
+	.get(
+		path,
+		p.authenticate('steam', (err: any) => console.log(err))
+	)
