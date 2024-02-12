@@ -5,8 +5,9 @@ const path = '/api/auth/return'
 let returnUrl = '/'
 
 export default router
-	.get(path, (req, res) => {
+	.use((req, res, next) => {
 		console.log(req.url, (req as any).originalUrl)
+		next()
 	})
 	.use(
 		path,
