@@ -6,7 +6,7 @@ let returnUrl = '/'
 
 export default router
 	.get(path, (req, res) => {
-		console.log(req.url, req.originalUrl)
+		console.log(req.url, (req as any).originalUrl)
 	})
 	.use(
 		path,
