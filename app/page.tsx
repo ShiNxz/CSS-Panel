@@ -8,7 +8,7 @@ import query from '@/utils/functions/db'
 
 const Home = async () => {
 	const serversGrid = await query.settings.getByKey('serversGrid')
-
+	console.log({ serversGrid })
 	return (
 		<>
 			<SSRHeader />

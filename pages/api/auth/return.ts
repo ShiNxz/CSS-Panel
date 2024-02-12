@@ -5,18 +5,7 @@ const path = '/api/auth/return'
 let returnUrl = '/'
 
 export default router
-	.use((req, res, next) => {
-		console.log(req.url, (req as any).originalUrl)
-		next()
-	})
-	.use(
-		path,
-		passport.authenticate(
-			'steam'
-			// { failureRedirect: returnUrl || '/', failureMessage: true, failWithError: true },
-			// (err: any) => console.log({ err })
-		)
-	)
+	.use(path, passport.authenticate('steam', { failureRedirect: returnUrl || '/' }))
 	.get(path, (_, res) => {
 		res.end('<script>window.close();</script >')
 	})

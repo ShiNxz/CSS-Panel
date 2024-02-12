@@ -6,6 +6,7 @@ import useAuth from '@/utils/hooks/useAuth'
 
 const Sidebar = () => {
 	const { admin } = useAuth()
+	console.log(admin, admin?.flags)
 
 	return (
 		<div className='flex flex-col min-w-[200px] pt-10'>
