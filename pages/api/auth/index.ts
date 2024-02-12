@@ -11,12 +11,17 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
 	switch (method) {
 		case 'GET': {
-			if (!req.user) return res.status(401).json({ error: 'Unauthorized' })
+			try {
+				if (!req.user) return res.status(401).json({ error: 'Unauthorized' })
 
-			const steam64 = req.user.id
-			const admin = await query.admins.getBySteam64(steam64)
+				const steam64 = req.user.id
+				const admin = await query.admins.getBySteam64(steam64)
 
-			return res.status(200).json({ user: req.user, admin })
+				return res.status(200).json({ user: req.user, admin })
+			} catch (error) {
+				console.error(error)
+				return res.status(400).json({ error: 'Internal Server Error' })
+			}
 		}
 	}
 }

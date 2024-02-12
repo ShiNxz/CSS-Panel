@@ -199,7 +199,6 @@ const ServerModal = () => {
 										<TableColumn key='mvps'>MVP</TableColumn>
 										<TableColumn key='score'>Score</TableColumn>
 										<TableColumn key='ping'>Ping</TableColumn>
-										{admin ? <TableColumn key='admin'>Admin</TableColumn> : <></>}
 									</TableHeader>
 									<TableBody items={typeof server.players !== 'number' ? server.players : []}>
 										{(item) => (
@@ -226,7 +225,7 @@ const ServerModal = () => {
 								)}
 							</ModalBody>
 							<ModalFooter>
-								{admin && (
+								{/* {admin && (
 									<Button
 										color='secondary'
 										variant='flat'
@@ -247,7 +246,7 @@ const ServerModal = () => {
 									passHref
 								>
 									<Button color='primary'>Connect</Button>
-								</Link>
+								</Link> */}
 							</ModalFooter>
 						</>
 					)

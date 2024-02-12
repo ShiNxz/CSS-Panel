@@ -62,7 +62,7 @@ const Settings = {
 			console.log(`[DB] Getting setting: ${key}`)
 
 			if (!rows.length || rows.length < 1) {
-				console.error(`[DB] Error while getting setting: ${key}`)
+				console.error(`[DB] Setting doesnt exists: ${key}`)
 				const defaultSettings = GetDefaultSettings()
 				return defaultSettings[key as keyof ISettings] as ISettings[K]
 			}

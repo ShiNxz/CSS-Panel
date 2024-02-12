@@ -15,7 +15,7 @@ passport.use(
 	new SteamStrategy(
 		{
 			returnURL: `${process.env.DOMAIN || 'http://localhost:3000'}/api/auth/return`,
-			realm: `${process.env.DOMAIN || 'http://localhost:3000/'}`,
+			realm: `${process.env.DOMAIN || 'http://localhost:3000'}/`,
 			apiKey: process.env.STEAM_API_KEY,
 			stateless: true,
 		},
