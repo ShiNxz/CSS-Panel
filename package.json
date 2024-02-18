@@ -1,6 +1,7 @@
 {
 	"name": "css-panel",
-	"version": "0.0.1",
+	"author": "ShiNxz",
+	"version": "0.9.5",
 	"private": true,
 	"scripts": {
 		"pull": "git pull",

@@ -1,3 +1,5 @@
+import packageJson from './package.json' with { type: 'json' }
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
 	images: {
@@ -7,6 +9,9 @@ const nextConfig = {
 				hostname: '**.steamstatic.com',
 			},
 		],
+	},
+	env: {
+		version: packageJson.version,
 	},
 }
 

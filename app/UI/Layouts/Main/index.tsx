@@ -2,12 +2,14 @@ import Footer from './Footer'
 import Navbar from './Navbar'
 import Sidebar from './Sidebar'
 import Logo from './Navbar/Logo'
+import UpdateButton from './Navbar/UpdateButton/Server'
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
 	return (
 		<>
 			<Navbar>
 				<Logo />
+				<UpdateButton />
 			</Navbar>
 			<div className='flex flex-row mb-36'>
 				<Sidebar />

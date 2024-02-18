@@ -2,7 +2,6 @@
 
 import User from './User'
 import ThemeSwitch from './Theme'
-import settingsStore from '@/utils/stores/settings.store'
 import { Link } from '@nextui-org/link'
 import { useState } from 'react'
 import {
@@ -17,7 +16,6 @@ import {
 
 const Navbar = ({ children }: { children: React.ReactNode }) => {
 	const [isMenuOpen, setIsMenuOpen] = useState(false)
-	const settings = settingsStore((state) => state.settings)
 
 	const menuItems = ['Dashboard']
 
