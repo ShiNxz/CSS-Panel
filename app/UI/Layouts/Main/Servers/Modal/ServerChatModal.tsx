@@ -2,17 +2,15 @@
 
 import type { SA_ChatLog } from '@/utils/types/db/plugin'
 import { Modal, ModalContent, ModalBody, ModalFooter } from '@nextui-org/modal'
-import { IconReload } from '@tabler/icons-react'
 import { Button } from '@nextui-org/button'
 import { Input } from '@nextui-org/input'
-import { FormHTMLAttributes, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { Tooltip } from '@nextui-org/tooltip'
 import useSWR from 'swr'
 import useServersStore from '../store'
 import toast from 'react-hot-toast'
 import axios from 'axios'
 import fetcher from '@/utils/fetcher'
-import { Switch } from '@nextui-org/switch'
-import { Tooltip } from '@nextui-org/tooltip'
 
 const ServerChatModal = () => {
 	const chatModal = useServersStore((state) => state.chatModal)

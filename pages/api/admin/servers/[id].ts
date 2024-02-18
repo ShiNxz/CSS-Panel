@@ -27,7 +27,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
 		case 'DELETE': {
 			try {
-				const admins = await query.admins.getByServerId(Number(id))
+				const admins = await query.admins.getByServerId(id)
 				if (admins.length > 0) return res.status(403).send('Please remove all admins from this server first')
 
 				await query.servers.delete(Number(id))

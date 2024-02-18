@@ -22,7 +22,7 @@ const Mutes = {
 	getAll: async (page: number, limit: number): Promise<SA_Mute[]> => {
 		try {
 			const [rows] = await db.query<SA_MutesDB[]>(
-				`SELECT * FROM \`sa_mutes\` LIMIT ${limit} OFFSET ${(page - 1) * limit}`
+				`SELECT * FROM \`sa_mutes\` ORDER BY \`id\` DESC LIMIT ${limit} OFFSET ${(page - 1) * limit}`
 			)
 			return rows
 		} catch (err) {

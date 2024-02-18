@@ -22,7 +22,7 @@ const Bans = {
 	getAll: async (page: number, limit: number): Promise<SA_Ban[]> => {
 		try {
 			const [rows] = await db.query<SA_BansDB[]>(
-				`SELECT * FROM \`sa_bans\` LIMIT ${limit} OFFSET ${(page - 1) * limit}`
+				`SELECT * FROM \`sa_bans\` ORDER BY \`id\` DESC LIMIT ${limit} OFFSET ${(page - 1) * limit}`
 			)
 			return rows
 		} catch (err) {

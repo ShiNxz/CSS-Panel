@@ -4,6 +4,7 @@ import query from '@/utils/functions/db'
 import router from '@/lib/Router'
 import adminSchema from '@/utils/schemas/adminSchema'
 import isAdminMiddleware from '@/utils/middlewares/isAdminMiddleware'
+import { SA_Admin } from '@/utils/types/db/plugin'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 	await router.run(req, res)
@@ -21,9 +22,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 		case 'PUT': {
 			const { flags, immunity, player_name, player_steamid, server_id } = adminSchema.parse(req.body)
 
+			const userImmunity = isAdmin.immunity
+			if (Number(immunity) >= Number(userImmunity))
+				return res.status(403).json({ message: 'You cannot edit an admin with higher immunity than yours' })
+
 			const admin = await query.admins.update({
 				id: Number(id),
-				flags: flags as Flag,
+				flags: flags as SA_Admin['flags'],
 				immunity: immunity.toString() ?? 0,
 				player_name,
 				player_steamid,
@@ -37,6 +42,15 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
 		case 'DELETE': {
 			try {
+				const admin = await query.admins.getById(Number(id))
+				if (!admin) return res.status(404).json({ message: 'Admin not found' })
+
+				const userImmunity = isAdmin.immunity
+				if (Number(admin.immunity) >= Number(userImmunity))
+					return res
+						.status(403)
+						.json({ message: 'You cannot delete an admin with higher immunity than yours' })
+
 				await query.admins.delete(Number(id))
 
 				// todo send a rcon command to update the admin on the servers

@@ -1,27 +1,32 @@
 'use client'
 
-import type { SA_Admin, SA_Server } from '@/utils/types/db/plugin'
+import type { SA_Admin, SA_AdminGroup, SA_Server } from '@/utils/types/db/plugin'
+import type { Flag } from '@/utils/types/db/css'
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from '@nextui-org/table'
-import { useCallback, useEffect } from 'react'
-import { Spinner } from '@nextui-org/spinner'
-import { Chip } from '@nextui-org/chip'
 import { IconEdit, IconTrash } from '@tabler/icons-react'
+import { useEffect } from 'react'
+import { formatDistanceToNow } from 'date-fns'
+import { Tooltip } from '@nextui-org/tooltip'
+import { Spinner } from '@nextui-org/spinner'
 import { Button } from '@nextui-org/button'
 import { toast } from 'react-hot-toast'
-import { formatDistanceToNow } from 'date-fns'
-import fetcher from '@/utils/fetcher'
+import { Chip } from '@nextui-org/chip'
 import useSWR, { mutate } from 'swr'
-import useManageAdminsStore from './store'
+import fetcher from '@/utils/fetcher'
 import ConfirmationModal from '@/app/UI/General/DeleteModal'
-import axios from 'axios'
+import useAuth from '@/utils/hooks/useAuth'
+import useManageAdminsStore from './store'
 import Link from 'next/link'
+import axios from 'axios'
 
 const AdminsTable = () => {
 	const setServers = useManageAdminsStore((state) => state.setServers)
+	const { admin } = useAuth()
 
-	const { data, isLoading } = useSWR<{ admins: SA_Admin[]; servers: SA_Server[] }>(`/api/admin/admins`, fetcher, {
-		keepPreviousData: true,
-	})
+	const { data, isLoading } = useSWR<{ admins: SA_Admin[]; servers: SA_Server[]; groups: SA_AdminGroup[] }>(
+		`/api/admin/admins`,
+		fetcher
+	)
 
 	useEffect(() => {
 		data && setServers(data?.servers ?? [])
@@ -41,6 +46,7 @@ const AdminsTable = () => {
 
 			toast.success(`Succesfully deleted admin!`)
 			await mutate('/api/admin/admins')
+			await mutate('/api/admin/groups')
 		} catch (error) {
 			toast.error((error as any).response.data ?? `Failed to delete admin!`)
 		}
@@ -48,9 +54,9 @@ const AdminsTable = () => {
 		setDelete(null)
 	}
 
-	const loadingState = isLoading || !data?.servers || data?.admins?.length === 0 ? 'loading' : 'idle'
+	const loadingState = isLoading || !data?.servers || !data?.admins ? 'loading' : 'idle'
 
-	const renderCell = useCallback((item: SA_Admin, columnKey: any) => {
+	const renderCell = (item: SA_Admin, columnKey: any) => {
 		switch (columnKey) {
 			case 'id':
 				return (
@@ -62,12 +68,46 @@ const AdminsTable = () => {
 					</Chip>
 				)
 
-			case 'role':
-				return <>Future</>
+			case 'group': {
+				const group =
+					typeof item.flags === 'string' && item.flags.startsWith('#')
+						? data?.groups.find((g) => g.id === item.flags)
+						: null
+
+				return group ? (
+					<>
+						{group.name} ({group.id})
+					</>
+				) : (
+					<>-</>
+				)
+			}
 
 			case 'server': {
 				if (!item.server_id) return <>ALL</>
-				console.log(data?.servers)
+				if (item.server_id.length > 1) {
+					const servers = item.server_id.map(
+						(id) => data?.servers.find((s) => s.id.toString() === id)?.hostname
+					)
+
+					return (
+						<Tooltip
+							content={servers.join('\n')}
+							className='whitespace-pre-wrap'
+							closeDelay={50}
+							color='primary'
+						>
+							<Chip
+								variant='flat'
+								size='sm'
+								color='primary'
+							>
+								{servers.length} Servers
+							</Chip>
+						</Tooltip>
+					)
+				}
+
 				const server = data?.servers.find((s) => s.id == (item.server_id || 0))
 
 				return (
@@ -81,7 +121,7 @@ const AdminsTable = () => {
 			}
 
 			case 'player_name':
-				return <div>{item[columnKey as keyof SA_Admin]}</div>
+				return <div>{item.player_name}</div>
 
 			case 'player_steamid':
 				return (
@@ -89,18 +129,64 @@ const AdminsTable = () => {
 						href={`https://steamcommunity.com/profiles/${item[columnKey as keyof SA_Admin]}`}
 						target='_blank'
 					>
-						{item[columnKey as keyof SA_Admin]}
+						{item.player_steamid}
 					</Link>
 				)
 
 			case 'flags':
+				const group =
+					typeof item.flags === 'string' && item.flags.startsWith('#')
+						? data?.groups.find((group) => group.id === item.flags)
+						: null
+
+				const flags = (group && group.flags.join('\n')) || (item.flags as Flag[]).join(', ')
+
+				return group ? (
+					<Tooltip
+						content={flags}
+						closeDelay={50}
+						color='secondary'
+						className='whitespace-pre-wrap'
+					>
+						<Chip
+							variant='flat'
+							size='sm'
+							color='secondary'
+						>
+							{group.flags.length} Flags from {group?.name}
+						</Chip>
+					</Tooltip>
+				) : item.flags.length > 2 ? (
+					<Tooltip
+						content={(item.flags as Flag[]).join('\n')}
+						closeDelay={50}
+						color='primary'
+						className='whitespace-pre-wrap'
+					>
+						<Chip
+							variant='flat'
+							size='sm'
+							color='primary'
+						>
+							{item.flags.length} Flags
+						</Chip>
+					</Tooltip>
+				) : (
+					<Chip
+						variant='flat'
+						size='sm'
+					>
+						{(item.flags as Flag[]).join(', ')}
+					</Chip>
+				)
+
 			case 'immunity':
 				return (
 					<Chip
 						variant='flat'
 						size='sm'
 					>
-						{item[columnKey as keyof SA_Admin]}
+						{item.immunity}
 					</Chip>
 				)
 
@@ -108,6 +194,7 @@ const AdminsTable = () => {
 				return item['ends'] ? formatDistanceToNow(new Date(item['ends'])) : 'Never'
 
 			case 'actions':
+				const isDisabled = Number(admin!.immunity) <= Number(item.immunity)
 				return (
 					<div className='flex items-center gap-2'>
 						<Button
@@ -115,6 +202,7 @@ const AdminsTable = () => {
 							variant='flat'
 							color='primary'
 							onClick={() => setEdit(item)}
+							isDisabled={isDisabled}
 						>
 							<IconEdit size={16} />
 							Edit Admin
@@ -124,6 +212,7 @@ const AdminsTable = () => {
 							variant='flat'
 							color='danger'
 							onClick={() => setDelete(item)}
+							isDisabled={isDisabled}
 						>
 							<IconTrash size={16} />
 							Delete Admin
@@ -134,7 +223,7 @@ const AdminsTable = () => {
 			default:
 				return <>Error!</>
 		}
-	}, [])
+	}
 
 	return (
 		<>
@@ -143,22 +232,21 @@ const AdminsTable = () => {
 					<TableColumn key='id'>ID</TableColumn>
 					<TableColumn key='player_name'>Name</TableColumn>
 					<TableColumn key='player_steamid'>SteamId</TableColumn>
-					<TableColumn key='role'>Role</TableColumn>
-					<TableColumn key='server'>Server / Group</TableColumn>
+					<TableColumn key='group'>Group</TableColumn>
+					<TableColumn key='server'>Servers</TableColumn>
 					<TableColumn key='immunity'>Immunity</TableColumn>
-					<TableColumn key='flags'>Flags</TableColumn>
+					<TableColumn key='flags'>Flags / Group</TableColumn>
 					<TableColumn key='ends'>Ends</TableColumn>
 					<TableColumn key='actions'>Actions</TableColumn>
 				</TableHeader>
 				<TableBody
-					items={data?.admins ?? []}
 					loadingContent={<Spinner />}
 					loadingState={loadingState}
+					isLoading={loadingState === 'loading'}
+					items={data?.admins ?? []}
 				>
 					{(item) => (
-						<TableRow key={item.id}>
-							{(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
-						</TableRow>
+						<TableRow>{(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}</TableRow>
 					)}
 				</TableBody>
 			</Table>

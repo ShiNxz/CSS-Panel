@@ -7,6 +7,8 @@ import clsx from 'clsx'
 
 import './styles/globals.scss'
 
+export const dynamic = 'force-dynamic'
+
 export const generateMetadata = async (): Promise<Metadata> => {
 	const title = await query.settings.getByKey('title')
 	const description = await query.settings.getByKey('description')

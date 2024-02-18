@@ -73,7 +73,7 @@ const Servers = {
 	},
 	count: async (): Promise<number> => {
 		try {
-			const [rows] = await db.query<DB_Count[]>('SELECT COUNT(*) FROM `sa_admins`')
+			const [rows] = await db.query<DB_Count[]>('SELECT COUNT(*) FROM `sa_servers`')
 			return rows?.[0]?.['COUNT(*)']
 		} catch (err) {
 			console.error(`[DB] Error while counting admins: ${err}`)

@@ -1,9 +1,11 @@
-import useAuth, { handleLogin, handleLogout } from '@/utils/hooks/useAuth'
+import type { Flag } from '@/utils/types/db/css'
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from '@nextui-org/dropdown'
-import { Button } from '@nextui-org/button'
 import { User as NextUIUser } from '@nextui-org/user'
-import { Icon360, IconLogout } from '@tabler/icons-react'
+import { IconLogout } from '@tabler/icons-react'
+import { Button } from '@nextui-org/button'
 import { cn } from '@nextui-org/system'
+import useAuth, { handleLogin, handleLogout } from '@/utils/hooks/useAuth'
+import { Tooltip } from '@nextui-org/tooltip'
 
 const iconClasses = 'text-xl text-default-500 pointer-events-none flex-shrink-0'
 
@@ -22,7 +24,25 @@ const User = () => {
 						className: 'mr-1',
 					}}
 					className='transition-transform mr-4'
-					description={admin?.flags ? admin?.flags : 'Player'}
+					description={
+						admin ? (
+							admin?.group ? (
+								admin?.group.name
+							) : (admin.flags as Flag[]).length > 1 ? (
+								<Tooltip
+									content={(admin.flags as Flag[]).join('\n')}
+									color='primary'
+									className='whitespace-pre-wrap'
+								>
+									<div>{admin.flags.length} Flags</div>
+								</Tooltip>
+							) : (
+								admin.flags[0]
+							)
+						) : (
+							'Player'
+						)
+					}
 					name={user.displayName}
 					classNames={{
 						name: 'text-default-900 font-medium',

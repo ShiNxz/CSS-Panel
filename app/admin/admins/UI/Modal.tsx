@@ -1,15 +1,19 @@
+import type { SA_AdminGroup } from '@/utils/types/db/plugin'
+import type { Flag } from '@/utils/types/db/css'
 import { useForm, zodResolver } from '@mantine/form'
-import { useEffect, useState } from 'react'
-import { toast } from 'react-hot-toast'
 import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from '@nextui-org/modal'
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from '@nextui-org/dropdown'
+import { toast } from 'react-hot-toast'
 import { Input } from '@nextui-org/input'
 import { Button } from '@nextui-org/button'
+import { useEffect, useState } from 'react'
 import { Checkbox } from '@nextui-org/checkbox'
-import { mutate } from 'swr'
+import useSWR, { mutate } from 'swr'
+import adminSchema, { FLAGS, adminFlags } from '@/utils/schemas/adminSchema'
 import useManageAdminsStore from './store'
+import fetcher from '@/utils/fetcher'
 import axios from 'axios'
-import adminSchema, { adminFlags } from '@/utils/schemas/adminSchema'
+import useAuth from '@/utils/hooks/useAuth'
 
 const AdminModal = () => {
 	const open = useManageAdminsStore((state) => state.open)
@@ -17,8 +21,12 @@ const AdminModal = () => {
 	const setOpen = useManageAdminsStore((state) => state.setOpen)
 	const servers = useManageAdminsStore((state) => state.servers)
 
-	const [allServers, setAllServers] = useState(true)
+	const { admin } = useAuth()
+
+	const [allServers, setAllServers] = useState(edit ? !edit.server_id : true)
 	const [isLoading, setIsLoading] = useState(false)
+
+	const { data } = useSWR<{ groups: SA_AdminGroup[] }>(`/api/admin/admins`, fetcher)
 
 	const handleSubmit = async () => {
 		if (isLoading) return
@@ -47,24 +55,37 @@ const AdminModal = () => {
 		initialValues: {
 			player_name: edit ? edit.player_name : '',
 			player_steamid: edit ? edit.player_steamid : '',
-			server_id: edit ? Number(edit.server_id) : 0,
-			flags: edit ? (edit.flags as string) : '@css/root',
+			server_id: edit ? edit.server_id : null,
+			flags: edit ? edit.flags : [],
 			immunity: edit ? edit.immunity : '0',
 		},
 		validate: zodResolver(adminSchema),
 	})
 
-	console.log({ errors: form.errors })
-
 	useEffect(() => {
 		form.setValues({
 			player_name: edit ? edit.player_name : '',
 			player_steamid: edit ? edit.player_steamid : '',
-			server_id: edit ? Number(edit.server_id) : 0,
-			flags: edit ? edit.flags : '@css/root',
+			server_id: edit ? edit.server_id : null,
+			flags: edit ? edit.flags : [],
 			immunity: edit ? edit.immunity : '0',
 		})
+
+		setAllServers(edit ? !edit.server_id : true)
 	}, [edit])
+
+	const selectedGroup =
+		typeof form.values.flags === 'string' && form.values.flags.startsWith('#')
+			? data?.groups.find((g) => g.id === form.values.flags) ?? undefined
+			: undefined
+
+	const selectedFlags = typeof form.values.flags !== 'string' ? form.values.flags.join(', ') : undefined
+
+	const serversLabel = !form.values.server_id
+		? 'All'
+		: form.values.server_id.length > 1
+		? form.values.server_id.length
+		: servers.find((s) => s.id.toString() === form.values.server_id![0])?.hostname ?? 'None'
 
 	return (
 		<Modal
@@ -109,48 +130,102 @@ const AdminModal = () => {
 										variant='bordered'
 										isDisabled={allServers}
 									>
-										Server:{' '}
-										{servers.find((s) => s.id === form.values.server_id)?.hostname ?? 'None'}
+										Servers: {serversLabel}
 									</Button>
 								</DropdownTrigger>
-								<DropdownMenu aria-label='Servers'>
-									{servers.map((server) => (
+								<DropdownMenu
+									aria-label='Servers'
+									items={servers}
+									closeOnSelect={false}
+									selectionMode='multiple'
+									selectedKeys={new Set([...(form.values.server_id ?? [])])}
+									onSelectionChange={(servers) =>
+										form.setFieldValue('server_id', Array.from(servers) as string[])
+									}
+									disallowEmptySelection
+								>
+									{(server) => (
 										<DropdownItem
 											key={server.id}
 											id={server.id.toString()}
 											color='default'
-											onClick={() => form.setValues({ server_id: server.id })}
 										>
 											{server.hostname}
 										</DropdownItem>
-									))}
+									)}
 								</DropdownMenu>
 							</Dropdown>
 							<Dropdown>
 								<DropdownTrigger>
-									<Button variant='bordered'>Flags: {form.values.flags}</Button>
+									<Button variant='bordered'>Group: {selectedGroup?.name}</Button>
 								</DropdownTrigger>
 								<DropdownMenu
 									aria-label='Flags'
-									items={adminFlags}
+									items={data?.groups ?? []}
 								>
-									{adminFlags.map((flag) => (
+									{data?.groups.map((group) => (
 										<DropdownItem
-											key={flag}
-											id={flag}
+											key={group.id}
+											id={group.id}
 											color='default'
-											onClick={() => form.setValues({ flags: flag })}
+											onClick={() => form.setValues({ flags: group.id })}
 										>
-											{flag}
+											{group.name} {form.values.flags === group.id && '(Selected)'}
+										</DropdownItem>
+									)) || <></>}
+								</DropdownMenu>
+							</Dropdown>
+							<Dropdown>
+								<DropdownTrigger>
+									<Button variant='bordered'>
+										Flags:{' '}
+										{selectedGroup ? (
+											<>
+												{selectedGroup.flags.length > 3
+													? selectedGroup.flags.length
+													: selectedGroup.flags.join(', ')}{' '}
+												({selectedGroup.name})
+											</>
+										) : (
+											selectedFlags
+										)}
+									</Button>
+								</DropdownTrigger>
+								<DropdownMenu
+									aria-label='Flags'
+									items={FLAGS}
+									closeOnSelect={false}
+									selectionMode='multiple'
+									selectedKeys={new Set([...(form.values.flags ?? [])])}
+									onSelectionChange={(flags) =>
+										form.setFieldValue(
+											'flags',
+											Array.from(flags).filter((f) => adminFlags.includes(f as Flag)) as Flag[]
+										)
+									}
+									disallowEmptySelection
+								>
+									{FLAGS.map((flag) => (
+										<DropdownItem
+											key={flag.id}
+											id={flag.id}
+											color='default'
+										>
+											{flag.id} - {flag.description}
 										</DropdownItem>
 									))}
 								</DropdownMenu>
 							</Dropdown>
 							<Input
-								{...form.getInputProps('immunity')}
+								value={form.values.immunity}
+								onChange={(e) =>
+									Number(e.target.value) < Number(admin?.immunity) &&
+									form.setFieldValue('immunity', e.target.value)
+								}
 								errorMessage={form.errors.immunity}
 								label='Immunity'
-								placeholder='Example, 99'
+								placeholder={`Example, 99, max of ${Number(admin?.immunity) - 1}`}
+								description={`Max of ${Number(admin?.immunity) - 1} (Your immunity - 1)`}
 								type='number'
 								variant='bordered'
 								disabled={isLoading}

@@ -59,7 +59,7 @@ const Settings = {
 
 			const [rows] = await db.query<CSSP_Setting[]>(`SELECT * FROM \`cssp_settings\` WHERE \`key\` LIKE '${key}'`)
 
-			console.log(`[DB] Getting setting: ${key}`)
+			// console.log(`[DB] Getting setting: ${key}`)
 
 			if (!rows.length || rows.length < 1) {
 				console.error(`[DB] Setting doesnt exists: ${key}`)

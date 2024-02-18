@@ -25,8 +25,6 @@ const ChatLogs = {
 				[serverId, minutes]
 			)
 
-			console.log(rows)
-
 			return rows
 		} catch (err) {
 			console.error(`[DB] Error while getting all chat logs: ${err}`)

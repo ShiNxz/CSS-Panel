@@ -1,14 +1,25 @@
 import type { RowDataPacket } from 'mysql2'
 import type { Flag } from './css'
 
+type Group = `#${string}`
+
 interface SA_Admin {
 	id?: number
 	player_steamid: string
 	player_name: string
-	flags: Flag
+	flags: Group | Flag[]
 	immunity: string
-	server_id?: number | null
+	server_id: string[] | null
 	ends?: string | null
+	created?: string
+	group?: SA_AdminGroup
+}
+
+interface SA_AdminGroup {
+	id: `#${string}`
+	name: string
+	flags: Flag[]
+	immunity: string
 	created?: string
 }
 

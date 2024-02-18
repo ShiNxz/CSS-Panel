@@ -3,6 +3,8 @@ import ServerChatModal from './Modal/ServerChatModal'
 import ServerModal from './Modal'
 import query from '@/utils/functions/db'
 
+export const dynamic = 'force-dynamic'
+
 const Servers = async () => {
 	const servers = await query.servers.getAllSafe()
 

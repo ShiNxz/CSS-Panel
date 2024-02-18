@@ -6,9 +6,11 @@ import SSRHeader from './UI/Layouts/Main/Header/SSR'
 import ServersTable from './UI/Layouts/Main/Servers/Table'
 import query from '@/utils/functions/db'
 
+export const dynamic = 'force-dynamic'
+
 const Home = async () => {
 	const serversGrid = await query.settings.getByKey('serversGrid')
-	console.log({ serversGrid })
+
 	return (
 		<>
 			<SSRHeader />

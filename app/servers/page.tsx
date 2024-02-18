@@ -3,6 +3,8 @@ import SSRHeader from '../UI/Layouts/Main/Header/SSR'
 import Servers from '../UI/Layouts/Main/Servers'
 import ServersTable from '../UI/Layouts/Main/Servers/Table'
 
+export const dynamic = 'force-dynamic'
+
 const ServersPage = async () => {
 	const serversGrid = await query.settings.getByKey('serversGrid')
 

@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 const RootLayout = ({ children }: { children: React.ReactNode }) => {
 	return (
-		<AdminCheck>
+		<AdminCheck flags={['@css/root']}>
 			<AdminTabs />
 			{children}
 		</AdminCheck>

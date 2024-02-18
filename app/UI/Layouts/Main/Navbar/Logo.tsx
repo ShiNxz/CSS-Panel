@@ -1,6 +1,8 @@
 import query from '@/utils/functions/db'
 import isUrl from '@/utils/functions/isURL'
 
+export const dynamic = 'force-dynamic'
+
 const Logo = async () => {
 	const logo = await query.settings.getByKey('logo')
 

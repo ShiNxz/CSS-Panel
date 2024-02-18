@@ -26,6 +26,6 @@
 			"@/func/*": ["utils/functions/*"]
 		}
 	},
-	"include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+	"include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "ecosystem.config.js"],
 	"exclude": ["node_modules"]
 }

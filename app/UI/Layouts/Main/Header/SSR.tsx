@@ -1,6 +1,8 @@
 import query from '@/utils/functions/db'
 import Header from '.'
 
+export const dynamic = 'force-dynamic'
+
 const SSRHeader = async () => {
 	const headerImage = await query.settings.getByKey('headerImage')
 	const headerCodeHTML = await query.settings.getByKey('headerCodeHTML')

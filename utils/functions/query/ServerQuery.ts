@@ -28,7 +28,7 @@ const ServerQuery = async (serverId: number, advanced?: boolean): Promise<SafeSe
 		// Get the chat logs of 5 minutes ago
 		const chatMessages = advanced ? await query.chatLogs.getAllByServerAndMinutes(Number(serverId), 5) : []
 
-		const newPlayers: PlayerInfo[] = await Promise.all(
+	const newPlayers: PlayerInfo[] = await Promise.all(
 			players.map(async (player) => {
 				const { userId, playerName, steam64, score, roundsWon, ping, avatar, kills, deaths, mvps } = player
 

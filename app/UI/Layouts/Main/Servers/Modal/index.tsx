@@ -3,7 +3,6 @@
 import type { PlayerInfo } from '@/utils/functions/query/ServerQuery'
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from '@nextui-org/table'
 import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from '@nextui-org/modal'
-import { Button } from '@nextui-org/button'
 import { User } from '@nextui-org/user'
 import { Chip } from '@nextui-org/chip'
 import { IconBan, IconCrown } from '@tabler/icons-react'
