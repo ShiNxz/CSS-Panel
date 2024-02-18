@@ -1,5 +1,3 @@
-// @ts-check
-
 import packageJson from './package.json'
 
 /** @type {import('next').NextConfig} */
