@@ -9,7 +9,7 @@ import axios from 'axios'
 const useAuth = (): AuthHook => {
 	const { data, isLoading, error } = useSWR<IAuth>(`/api/auth`, fetcher)
 
-	if (data && data.admin.group) {
+	if (data && data.admin && data.admin.group) {
 		data.admin.flags = data.admin.group.flags
 		data.admin.immunity = data.admin.group.immunity
 	}
