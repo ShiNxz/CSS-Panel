@@ -17,6 +17,7 @@ const PluginStatus = async (ip: string, port: number, password: string): Promise
 		server.authenticate()
 
 		const status = await server.exec('css_query')
+		if (!status) return null
 
 		const jsonStatus = JSON.parse(status) as PluginStatus
 		const { pluginVersion } = jsonStatus.server

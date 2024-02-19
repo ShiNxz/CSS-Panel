@@ -26,20 +26,21 @@ const User = () => {
 					className='transition-transform mr-4'
 					description={
 						admin ? (
-							admin?.group ? (
-								admin?.group.name
-							) : (admin.flags as Flag[]).length > 1 ? (
-								<Tooltip
-									content={(admin.flags as Flag[]).join('\n')}
-									color='primary'
-									className='whitespace-pre-wrap'
-								>
-									<div>{admin.flags.length} Flags</div>
-								</Tooltip>
-							) : (
-								admin.flags[0]
-							)
+							<></>
 						) : (
+							// admin?.group ? (
+							// 	admin?.group.name
+							// ) : (admin.flags as Flag[]).length > 1 ? (
+							// 	<Tooltip
+							// 		content={(admin.flags as Flag[]).join('\n')}
+							// 		color='primary'
+							// 		className='whitespace-pre-wrap'
+							// 	>
+							// 		<div>{admin.flags.length} Flags</div>
+							// 	</Tooltip>
+							// ) : (
+							// 	admin.flags[0]
+							// )
 							'Player'
 						)
 					}
