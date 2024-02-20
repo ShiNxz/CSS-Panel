@@ -28,9 +28,9 @@ const User = () => {
 						admin ? (
 							admin?.group ? (
 								admin?.group.name
-							) : (admin.flags as Flag[]).length > 1 ? (
+							) : typeof admin.flags !== 'string' && admin.flags.length > 1 ? (
 								<Tooltip
-									content={(admin.flags as Flag[]).join('\n')}
+									content={typeof admin.flags !== 'string' ? admin.flags.join('\n') : admin.flags}
 									color='primary'
 									className='whitespace-pre-wrap'
 								>
