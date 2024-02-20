@@ -61,12 +61,12 @@ const AdminGroupsTable = () => {
 				return <div>{item.name}</div>
 
 			case 'flags':
-				console.log({ item })
 				return typeof item.flags !== 'string' ? (
 					item.flags ? (
 						item.flags.length > 2 ? (
 							<Tooltip
 								// content={item.flags.join('\n')}
+								content='test'
 								color='primary'
 								className='whitespace-pre-wrap'
 							>
