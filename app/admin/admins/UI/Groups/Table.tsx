@@ -68,7 +68,7 @@ const AdminGroupsTable = () => {
 								// content={item.flags.join('\n')}
 								content='test'
 								color='primary'
-								className='whitespace-pre-wrap'
+								className='whitespace-pre-wrap test'
 							>
 								<Chip
 									variant='flat'

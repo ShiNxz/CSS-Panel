@@ -32,8 +32,9 @@ const User = () => {
 								<Tooltip
 									content={typeof admin.flags !== 'string' ? admin.flags.join('\n') : admin.flags}
 									color='primary'
-									className='whitespace-pre-wrap'
+									className='whitespace-pre-wrap test2'
 								>
+									{console.log(admin.flags) as any}
 									<div>{admin.flags.length} Flags</div>
 								</Tooltip>
 							) : (
