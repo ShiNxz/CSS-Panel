@@ -65,10 +65,9 @@ const AdminGroupsTable = () => {
 					item.flags ? (
 						item.flags.length > 2 ? (
 							<Tooltip
-								// content={item.flags.join('\n')}
-								content='test'
+								content={item.flags.join('\n')}
 								color='primary'
-								className='whitespace-pre-wrap test'
+								className='whitespace-pre-wrap'
 							>
 								<Chip
 									variant='flat'

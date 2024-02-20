@@ -139,15 +139,21 @@ const AdminsTable = () => {
 						? data?.groups.find((group) => group.id === item.flags)
 						: null
 
-				const flags =
+				const relevantFlags = group ? group.flags : item.flags
+
+				const flags = relevantFlags && typeof relevantFlags !== 'string' ? relevantFlags.join(', ') : relevantFlags
+
+				const stringFlags =
 					(group && typeof group.flags !== 'string' ? group.flags.join(',') : group?.flags) ||
 					typeof item.flags !== 'string'
 						? (item.flags as Flag[]).join(',')
 						: item.flags
 
+				const flagsArray = typeof flags === 'string' ? flags.split(',') : flags
+
 				return group ? (
 					<Tooltip
-						content={flags}
+						content={stringFlags}
 						closeDelay={50}
 						color='secondary'
 						className='whitespace-pre-wrap'
@@ -157,12 +163,12 @@ const AdminsTable = () => {
 							size='sm'
 							color='secondary'
 						>
-							{group.flags.length} Flags from {group?.name}
+							{flagsArray.length} Flags from {group?.name}
 						</Chip>
 					</Tooltip>
 				) : item.flags.length > 2 ? (
 					<Tooltip
-						content={(item.flags as Flag[]).join('\n')}
+						content={flagsArray.join('\n')}
 						closeDelay={50}
 						color='primary'
 						className='whitespace-pre-wrap'
@@ -172,7 +178,7 @@ const AdminsTable = () => {
 							size='sm'
 							color='primary'
 						>
-							{item.flags.length} Flags
+							{flagsArray.length} Flags
 						</Chip>
 					</Tooltip>
 				) : (
@@ -180,7 +186,7 @@ const AdminsTable = () => {
 						variant='flat'
 						size='sm'
 					>
-						{(item.flags as Flag[]).join(', ')}
+						{flagsArray.join(', ')}
 					</Chip>
 				)
 
