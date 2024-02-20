@@ -162,7 +162,7 @@ const AdminsTable = () => {
 					</Tooltip>
 				) : item.flags.length > 2 ? (
 					<Tooltip
-						content={(item.flags as Flag[]).join('\n')}
+						// content={(item.flags as Flag[]).join('\n')}
 						closeDelay={50}
 						color='primary'
 						className='whitespace-pre-wrap'
