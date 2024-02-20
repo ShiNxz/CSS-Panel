@@ -140,8 +140,10 @@ const AdminsTable = () => {
 						: null
 
 				const flags =
-					(group && typeof group.flags !== 'string' ? group.flags.join(', ') : group?.flags) ||
-					(item.flags as Flag[]).join(', ')
+					(group && typeof group.flags !== 'string' ? group.flags.join(',') : group?.flags) ||
+					typeof item.flags !== 'string'
+						? (item.flags as Flag[]).join(',')
+						: item.flags
 
 				return group ? (
 					<Tooltip
