@@ -66,7 +66,7 @@ const AdminGroupsTable = () => {
 					item.flags ? (
 						item.flags.length > 2 ? (
 							<Tooltip
-								content={item.flags.join('\n')}
+								// content={item.flags.join('\n')}
 								color='primary'
 								className='whitespace-pre-wrap'
 							>
