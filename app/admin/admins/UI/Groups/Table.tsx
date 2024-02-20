@@ -62,31 +62,35 @@ const AdminGroupsTable = () => {
 
 			case 'flags':
 				console.log({ item })
-				return item.flags ? (
-					item.flags.length > 2 ? (
-						<Tooltip
-							content={item.flags && item.flags.join('\n')}
-							color='primary'
-							className='whitespace-pre-wrap'
-						>
+				return typeof item.flags !== 'string' ? (
+					item.flags ? (
+						item.flags.length > 2 ? (
+							<Tooltip
+								content={item.flags.join('\n')}
+								color='primary'
+								className='whitespace-pre-wrap'
+							>
+								<Chip
+									variant='flat'
+									size='sm'
+									color='primary'
+								>
+									{item.flags.length} Flags
+								</Chip>
+							</Tooltip>
+						) : (
 							<Chip
 								variant='flat'
 								size='sm'
-								color='primary'
 							>
-								{item.flags.length} Flags
+								{item.flags.join(', ')}
 							</Chip>
-						</Tooltip>
+						)
 					) : (
-						<Chip
-							variant='flat'
-							size='sm'
-						>
-							{item.flags.join(', ')}
-						</Chip>
+						''
 					)
 				) : (
-					''
+					item.flags
 				)
 
 			case 'immunity':
