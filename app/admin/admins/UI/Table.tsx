@@ -139,7 +139,9 @@ const AdminsTable = () => {
 						? data?.groups.find((group) => group.id === item.flags)
 						: null
 
-				const flags = (group && group.flags.join('\n')) || (item.flags as Flag[]).join(', ')
+				const flags =
+					(group && typeof group.flags !== 'string' ? group.flags.join(', ') : group?.flags) ||
+					(item.flags as Flag[]).join(', ')
 
 				return group ? (
 					<Tooltip
