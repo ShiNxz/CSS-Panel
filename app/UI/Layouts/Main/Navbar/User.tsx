@@ -34,7 +34,6 @@ const User = () => {
 									color='primary'
 									className='whitespace-pre-wrap test2'
 								>
-									{console.log(admin.flags) as any}
 									<div>{admin.flags.length} Flags</div>
 								</Tooltip>
 							) : (
