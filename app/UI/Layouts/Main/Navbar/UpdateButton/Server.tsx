@@ -5,6 +5,8 @@ export const dynamic = 'force-dynamic'
 
 const UpdateButton = async () => {
 	const tags = await axios.get('https://api.github.com/repos/ShiNxz/CSS-Panel/tags')
+	if (!tags || !tags.data) return <UpdateButtonClient />
+
 	const latestVersion = tags.data[0].name as string
 	const currentVersion = process.env.version as string
 

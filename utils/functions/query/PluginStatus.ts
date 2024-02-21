@@ -1,6 +1,6 @@
 import { RCON } from '@fabricio-191/valve-server-query'
 
-const CURRENT_VERSION = '1.3.3b'
+const CURRENT_VERSION = '1.3.4'
 
 /**
  * Get the status of the server **using RCON and the custom plugin command (css_query)**
@@ -24,7 +24,6 @@ const PluginStatus = async (ip: string, port: number, password: string): Promise
 
 		console.log({ status, length: status.length })
 		const parsedStatus = sanitizeJSON(status)
-		console.log({ parsedStatus })
 
 		const jsonStatus = JSON.parse(parsedStatus) as PluginStatus
 		const { pluginVersion } = jsonStatus.server
