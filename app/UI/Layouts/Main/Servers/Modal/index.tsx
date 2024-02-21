@@ -286,6 +286,7 @@ const ServerModal = () => {
 						type='number'
 						value={banPlayer.duration}
 						onValueChange={(duration) => setBanPlayer({ ...banPlayer, duration })}
+						description='Time in minutes, 0 = Permanent ban'
 					/>
 				</ConfirmationModal>
 			)}

@@ -6,7 +6,12 @@ import query from '@/func/db'
 /**
  * Check if user is admin and has the required flag
  */
-const isAdminMiddleware = (req: NextApiRequest, res: NextApiResponse, flags?: Flag[]): Promise<SA_Admin> => {
+const isAdminMiddleware = (
+	req: NextApiRequest,
+	res: NextApiResponse,
+	flags?: Flag[],
+	filter: Filter = 'AND'
+): Promise<SA_Admin> => {
 	return new Promise(async (resolve, reject) => {
 		if (!req.user) return reject(res.status(400).json({ success: false, error: 'Protected Route' }))
 
@@ -17,13 +22,33 @@ const isAdminMiddleware = (req: NextApiRequest, res: NextApiResponse, flags?: Fl
 
 		if (!flags) return resolve(admin)
 
-		const adminFlags = admin.flags
+		let adminFlags: Flag[] | null = null
 
-		const hasFlag = flags.some((flag) => adminFlags.includes(flag))
+		if (typeof admin.flags === 'string' && admin.flags.startsWith('#')) {
+			const group = await query.adminGroups.getById(admin.flags)
+			if (group) adminFlags = group.flags
+		}
+
+		if (adminFlags === null) return reject(res.status(403).json({ success: false, error: 'Protected Route' }))
+
+		let hasFlag: boolean
+		if (filter === 'AND') {
+			hasFlag = flags.every((flag) => adminFlags!.includes(flag))
+		} else {
+			hasFlag = flags.some((flag) => adminFlags!.includes(flag))
+		}
+
 		if (!hasFlag) return reject(res.status(403).json({ success: false, error: 'Protected Route' }))
 
 		resolve(admin)
 	})
 }
+
+/**
+ * Filter type
+ * AND: All flags must be present
+ * OR: At least one flag must be present
+ */
+type Filter = 'AND' | 'OR'
 
 export default isAdminMiddleware

@@ -27,12 +27,22 @@ const User = () => {
 					description={
 						admin ? (
 							admin?.group ? (
-								admin?.group.name
+								<Tooltip
+									content={
+										typeof admin?.group.flags !== 'string'
+											? admin?.group.flags.join('\n')
+											: admin?.group.flags
+									}
+									color='primary'
+									className='whitespace-pre-wrap'
+								>
+									<div>{admin?.group.name}</div>
+								</Tooltip>
 							) : typeof admin.flags !== 'string' && admin.flags.length > 1 ? (
 								<Tooltip
 									content={typeof admin.flags !== 'string' ? admin.flags.join('\n') : admin.flags}
 									color='primary'
-									className='whitespace-pre-wrap test2'
+									className='whitespace-pre-wrap'
 								>
 									<div>{admin.flags.length} Flags</div>
 								</Tooltip>

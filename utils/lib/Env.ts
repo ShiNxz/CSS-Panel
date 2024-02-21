@@ -8,6 +8,7 @@ import { fromZodError } from 'zod-validation-error'
 const envSchema = z.object({
 	STEAM_API_KEY: z.string().min(1),
 	SESSION_SECRET: z.string().min(1),
+	DOMAIN: z.string().min(1),
 	DB_HOST: z.string().min(1),
 	DB_USER: z.string().min(1),
 	DB_PASSWORD: z.string().min(1),

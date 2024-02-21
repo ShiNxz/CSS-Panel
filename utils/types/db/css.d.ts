@@ -1,4 +1,4 @@
-import { z } from "zod"
+import { z } from 'zod'
 
 /**
  * - `@css/reservation` # Reserved slot access.
@@ -35,3 +35,14 @@ type Flag =
 	| '@css/rcon'
 	| '@css/cheats'
 	| '@css/root'
+	| WebFlag
+
+type WebFlag =
+	| '@web/root' // Settings, logs, etc.
+	| '@web/stats' // Statistics
+	| '@web/admins' // Admins
+	| '@web/admingroups' // Admin groups
+	| '@web/servers' // Servers
+	| '@web/bans' // Bans
+	| '@web/mutes' // Mutes
+	| '@web/logs' // Logs

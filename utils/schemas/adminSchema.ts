@@ -71,6 +71,38 @@ export const FLAGS: Flags[] = [
 		id: '@css/root',
 		description: 'Magically enables all flags and ignores immunity values.',
 	},
+	{
+		id: '@web/root',
+		description: 'Web panel root access.',
+	},
+	{
+		id: '@web/admins',
+		description: 'Manage web admins.',
+	},
+	{
+		id: '@web/admingroups',
+		description: 'Manage web admin groups.',
+	},
+	{
+		id: '@web/bans',
+		description: 'Manage bans.',
+	},
+	{
+		id: '@web/mutes',
+		description: 'Manage mutes.',
+	},
+	{
+		id: '@web/logs',
+		description: 'View panel logs.',
+	},
+	{
+		id: '@web/stats',
+		description: 'View server statistics.',
+	},
+	{
+		id: '@web/servers',
+		description: 'Manage servers.',
+	},
 ]
 
 export const adminFlags: Flag[] = FLAGS.map((flag) => flag.id)

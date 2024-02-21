@@ -1,6 +1,6 @@
 import { RCON } from '@fabricio-191/valve-server-query'
 
-const CURRENT_VERSION = '1.3.0c'
+const CURRENT_VERSION = '1.3.3a'
 
 /**
  * Get the status of the server **using RCON and the custom plugin command (css_query)**
@@ -24,7 +24,7 @@ const PluginStatus = async (ip: string, port: number, password: string): Promise
 
 		if (pluginVersion !== CURRENT_VERSION) {
 			console.warn(
-				`[PluginStatus] The plugin version for ${ip}:${port} is outdated: ${pluginVersion}, the latest version is: ${CURRENT_VERSION}\nDownload the latest version from: https://github.com/ShiNxz/CSS-Plugin`
+				`[PluginStatus] The plugin version (${pluginVersion}) for ${ip}:${port} is outdated, the latest version is: ${CURRENT_VERSION}\n->Download the latest version from: https://github.com/ShiNxz/CSS-Plugin`
 			)
 		}
 

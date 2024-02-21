@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import type { SA_Admin, SA_AdminGroup } from '@/utils/types/db/plugin'
+import type { SA_Admin } from '@/utils/types/db/plugin'
 import type { SteamProfile } from '@/utils/lib/Steam'
 import router from '@/lib/Router'
 import query from '@/utils/functions/db'

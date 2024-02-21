@@ -141,13 +141,13 @@ const AdminsTable = () => {
 
 				const relevantFlags = group ? group.flags : item.flags
 
-				const flags = relevantFlags && typeof relevantFlags !== 'string' ? relevantFlags.join(', ') : relevantFlags
+				const flags =
+					relevantFlags && typeof relevantFlags === 'object' ? relevantFlags.join(', ') : relevantFlags
+
+				console.log({ flags: item.flags, type: typeof item.flags })
 
 				const stringFlags =
-					(group && typeof group.flags !== 'string' ? group.flags.join(',') : group?.flags) ||
-					typeof item.flags !== 'string'
-						? (item.flags as Flag[]).join(',')
-						: item.flags
+					relevantFlags && typeof relevantFlags === 'object' ? relevantFlags.join('\n') : flags
 
 				const flagsArray = typeof flags === 'string' ? flags.split(',') : flags
 

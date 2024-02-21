@@ -16,7 +16,7 @@ interface SA_Admin {
 }
 
 interface SA_AdminGroup {
-	id: `#${string}`
+	id: Group
 	name: string
 	flags: Flag[]
 	immunity: string
