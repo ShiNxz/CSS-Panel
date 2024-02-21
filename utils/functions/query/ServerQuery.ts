@@ -30,7 +30,7 @@ const ServerQuery = async (serverId: number, advanced?: boolean): Promise<SafeSe
 
 	const newPlayers: PlayerInfo[] = await Promise.all(
 			players.map(async (player) => {
-				const { userId, playerName, steam64, score, roundsWon, ping, avatar, kills, deaths, mvps } = player
+				const { userId, playerName, steam64, score, ping, avatar, kills, deaths, mvps } = player
 
 				// Check if the player is an admin
 				const admin = await query.admins.getBySteam64AndServerId(steam64, serverId)
@@ -40,7 +40,6 @@ const ServerQuery = async (serverId: number, advanced?: boolean): Promise<SafeSe
 					playerName,
 					steam64,
 					score,
-					roundsWon,
 					avatar,
 					ping,
 					admin: advanced ? admin : null,
@@ -136,7 +135,6 @@ export interface PlayerInfo {
 	playerName?: string
 	steam64?: string
 	score?: number
-	roundsWon?: number
 	avatar?: string
 	ping?: number
 	admin: SA_Admin | null
