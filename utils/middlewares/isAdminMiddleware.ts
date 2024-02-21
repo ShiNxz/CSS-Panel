@@ -24,7 +24,9 @@ const isAdminMiddleware = (
 
 		let adminFlags: Flag[] | null = null
 
-		if (typeof admin.flags === 'string' && admin.flags.startsWith('#')) {
+		if (typeof admin.flags === 'object') {
+			adminFlags = admin.flags
+		} else {
 			const group = await query.adminGroups.getById(admin.flags)
 			if (group) adminFlags = group.flags
 		}
@@ -32,6 +34,7 @@ const isAdminMiddleware = (
 		if (adminFlags === null) return reject(res.status(403).json({ success: false, error: 'Protected Route' }))
 
 		let hasFlag: boolean
+
 		if (filter === 'AND') {
 			hasFlag = flags.every((flag) => adminFlags!.includes(flag))
 		} else {

@@ -47,7 +47,6 @@ const PlayerStatus = async (ip: string, port: number, password: string): Promise
 
 		server.destroy()
 
-		console.log({ players })
 		// Filter out empty names (bots)
 		return players
 	} catch (e) {

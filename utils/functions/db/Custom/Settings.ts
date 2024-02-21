@@ -85,7 +85,7 @@ const Settings = {
 
 			for await (const [key, value] of Object.entries(parsedSettings)) {
 				const date = new Date().toISOString().slice(0, 19).replace('T', ' ')
-				console.log({ key, value, date })
+
 				await db.query(
 					`INSERT INTO \`cssp_settings\` (\`key\`, \`value\`, \`lastChange\`) 
 						VALUES (?, ?, ?) 

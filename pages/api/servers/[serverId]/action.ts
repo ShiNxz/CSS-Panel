@@ -40,7 +40,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 						const reason = details as z.infer<typeof kickSchema>
 
 						await server.exec(`css_kick #${userId} ${reason}`)
-						console.log(`css_kick #${userId} ${reason}`)
 
 						break
 					}

@@ -144,8 +144,6 @@ const AdminsTable = () => {
 				const flags =
 					relevantFlags && typeof relevantFlags === 'object' ? relevantFlags.join(', ') : relevantFlags
 
-				console.log({ flags: item.flags, type: typeof item.flags })
-
 				const stringFlags =
 					relevantFlags && typeof relevantFlags === 'object' ? relevantFlags.join('\n') : flags
 

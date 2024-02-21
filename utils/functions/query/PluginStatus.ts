@@ -12,7 +12,6 @@ const PluginStatus = async (ip: string, port: number, password: string): Promise
 			ip,
 			port,
 			password,
-			debug: true,
 			enableWarns: true,
 			retries: 2,
 			timeout: 2000,

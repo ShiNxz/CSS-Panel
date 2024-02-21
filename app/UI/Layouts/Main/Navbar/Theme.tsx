@@ -14,7 +14,6 @@ const ThemeSwitch = () => {
 	}, [])
 
 	useEffect(() => {
-		console.log(theme, selectedTheme)
 		if (selectedTheme) {
 			if (theme) {
 				// Reload the theme

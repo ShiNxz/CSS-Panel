@@ -22,7 +22,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 		case 'POST': {
 			const { hostname, address } = serverSchema.parse(req.body)
 
-			const server = await query.servers.create({ hostname, address })
+			await query.servers.create({ hostname, address })
 
 			return res.status(201).send('Server created')
 		}
