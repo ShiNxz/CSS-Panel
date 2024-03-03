@@ -4,13 +4,13 @@
 	"version": "0.9.7",
 	"private": true,
 	"scripts": {
-		"pull": "git pull",
 		"dev": "next dev",
 		"build": "next build",
 		"start": "next start",
 		"lint": "next lint",
-		"update": "git pull",
-		"pm2": "pm2 startOrRestart ecosystem.config.js"
+		"pm2": "pm2 startOrRestart ecosystem.config.js",
+		"update": "git stash push --include-untracked && git stash drop",
+		"pull": "git pull && pnpm pm2"
 	},
 	"dependencies": {
 		"@fabricio-191/valve-server-query": "^4.1.9",
