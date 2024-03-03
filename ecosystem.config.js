@@ -4,7 +4,7 @@ module.exports = {
 			name: 'CSSPanel',
 			exec_mode: 'cluster',
 			instances: '1', // Or a number of instances
-			script: 'npm start',
+			script: 'npm start -p 3333',
 			args: 'start',
 			autorestart: true,
 			watch: true,
