@@ -4,7 +4,7 @@ module.exports = {
 			name: 'CSSPanel',
 			exec_mode: 'cluster',
 			instances: '1', // Or a number of instances
-			script: 'node_modules/next/dist/bin/next -p 3333',
+			script: 'pnpm start -p 3333',
 			args: 'start',
 			autorestart: true,
 			watch: true,
