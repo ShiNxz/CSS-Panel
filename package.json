@@ -9,7 +9,8 @@
 		"build": "next build",
 		"start": "next start",
 		"lint": "next lint",
-		"pm2": "next build && pm2 startOrRestart ecosystem.config.js"
+		"update": "git pull",
+		"pm2": "pm2 startOrRestart ecosystem.config.js"
 	},
 	"dependencies": {
 		"@fabricio-191/valve-server-query": "^4.1.9",
@@ -57,10 +58,12 @@
 		"nuqs": "^1.15.4",
 		"passport": "0.5.2",
 		"passport-steam": "1.0.18",
+		"pm2": "^5.3.1",
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",
 		"react-hot-toast": "^2.4.1",
 		"sass": "^1.70.0",
+		"sharp": "^0.33.2",
 		"steam-api-sdk": "^1.4.5",
 		"swr": "^2.2.4",
 		"tailwind-variants": "^0.1.18",
