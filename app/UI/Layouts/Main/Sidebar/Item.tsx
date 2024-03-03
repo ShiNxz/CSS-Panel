@@ -8,7 +8,7 @@ import { cn } from '@nextui-org/system'
 
 const Item = ({ name, icon: Icon, path }: Route) => {
 	const pathname = usePathname()
-	const active = pathname === path
+	const active = path === '/' ? pathname === path : pathname?.startsWith(path)
 
 	return (
 		<Link href={path}>

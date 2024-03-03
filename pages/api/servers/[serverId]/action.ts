@@ -1,9 +1,15 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { RCON } from '@fabricio-191/valve-server-query'
-import { z } from 'zod'
 import isAdminMiddleware from '@/utils/middlewares/isAdminMiddleware'
 import query from '@/utils/functions/db'
 import router from '@/lib/Router'
+import {
+	serverActionsSchema,
+	serverBanSchema,
+	serverKickSchema,
+	serverMuteSchema,
+} from '@/app/UI/Layouts/Main/Servers/Modal/Store'
+import Log from '@/utils/lib/Logs'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 	await router.run(req, res)
@@ -21,7 +27,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 				if (!dbServer) return res.status(404).json({ error: 'Server not found' })
 
 				const { address, rcon } = dbServer
-				const { action, userId, details } = serverActionsSchema.parse(req.body)
+				const { action, userId } = serverActionsSchema.parse(req.body)
+
+				const details = req.body.details
+				if (!details) return res.status(400).json({ error: 'Details not set' })
 
 				if (!rcon) return res.status(500).json({ error: 'RCON not set' })
 
@@ -37,7 +46,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
 				switch (action) {
 					case 'kick': {
-						const reason = details as z.infer<typeof kickSchema>
+						const reason = serverKickSchema.parse(details)
 
 						await server.exec(`css_kick #${userId} ${reason}`)
 
@@ -45,17 +54,27 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 					}
 
 					case 'ban': {
-						const { reason, duration } = details as z.infer<typeof banSchema>
+						const { reason, duration } = serverBanSchema.parse(details)
 
 						await server.exec(`css_ban #${userId} ${duration} ${reason}`)
 
 						break
 					}
+
+					case 'mute': {
+						const { reason, duration, type } = serverMuteSchema.parse(details)
+
+						const command = `css_${type.toLowerCase()}`
+
+						await server.exec(`${command} #${userId} ${duration} ${reason}`)
+
+						break
+					}
 				}
 
-				query.logs.create(
+				Log(
 					'Server Action',
-					`Admin ${req.user?.id} performed action ${action} on player ${userId} on server ${serverId}`,
+					`Admin ${req.user?.displayName} (${req.user?.id}) performed action '${action}' on player ${userId} on server #${serverId}`,
 					req.user?.id
 				)
 
@@ -66,17 +85,5 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 		}
 	}
 }
-
-const kickSchema = z.string()
-const banSchema = z.object({
-	duration: z.number(), // in minutes
-	reason: z.string(),
-})
-
-const serverActionsSchema = z.object({
-	action: z.enum(['kick', 'ban', 'message']),
-	userId: z.number(),
-	details: z.union([kickSchema, banSchema]),
-})
 
 export default handler

@@ -27,9 +27,7 @@ const AdvancedSwitch = ({ label, description, value, onChange, disabled }: Advan
 		>
 			<div className='flex flex-col gap-1'>
 				<p className='text-medium'>{label}</p>
-				{description && (
-					<p className='text-tiny text-default-400'>Get access to new features before they are released.</p>
-				)}
+				{description && <p className='text-tiny text-default-400'>{description}</p>}
 			</div>
 		</Switch>
 	)

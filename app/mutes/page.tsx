@@ -5,7 +5,7 @@ const MutesPage = () => {
 	return (
 		<>
 			<SSRHeader />
-			<Mutes />
+			<Mutes type='NORMAL' />
 		</>
 	)
 }

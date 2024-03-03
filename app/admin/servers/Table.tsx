@@ -5,19 +5,21 @@ import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from 
 import { useCallback } from 'react'
 import { Spinner } from '@nextui-org/spinner'
 import { Chip } from '@nextui-org/chip'
-import { IconEdit, IconTrash } from '@tabler/icons-react'
+import { IconEdit, IconMessage, IconTrash } from '@tabler/icons-react'
 import { Button } from '@nextui-org/button'
+import { toast } from 'react-hot-toast'
 import fetcher from '@/utils/fetcher'
 import useSWR, { mutate } from 'swr'
 import useManageServersStore from './store'
 import ConfirmationModal from '@/app/UI/General/DeleteModal'
 import axios from 'axios'
-import { toast } from 'react-hot-toast'
+import RconModal from './RconModal'
 
 const ServersTable = () => {
 	const setEdit = useManageServersStore((state) => state.setEdit)
 	const deleteServer = useManageServersStore((state) => state.delete)
 	const setDelete = useManageServersStore((state) => state.setDelete)
+	const setRcon = useManageServersStore((state) => state.setRcon)
 
 	const handleDeleteServer = async () => {
 		if (!deleteServer) return
@@ -79,6 +81,15 @@ const ServersTable = () => {
 							<IconTrash size={16} />
 							Delete Server
 						</Button>
+						<Button
+							size='sm'
+							variant='flat'
+							color='default'
+							onClick={() => setRcon(item.id)}
+						>
+							<IconMessage size={16} />
+							RCON
+						</Button>
 					</div>
 				)
 
@@ -119,6 +130,7 @@ const ServersTable = () => {
 					</p>
 				}
 			/>
+			<RconModal />
 		</>
 	)
 }

@@ -5,7 +5,7 @@ const BansPage = () => {
 	return (
 		<>
 			<SSRHeader />
-			<Bans />
+			<Bans type='NORMAL' />
 		</>
 	)
 }

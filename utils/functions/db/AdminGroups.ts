@@ -3,8 +3,6 @@ import type { DB_Count, SA_AdminGroup } from '@/utils/types/db/plugin'
 import type { Flag } from '@/utils/types/db/css'
 import db from '@/utils/lib/Mysql'
 
-const fields = ['id', 'name', 'flags', 'immunity']
-
 interface SA_AdminGroupDB extends SA_AdminGroup, RowDataPacket {}
 
 const Admins = {
@@ -18,7 +16,7 @@ const Admins = {
 
 			return rows
 		} catch (err) {
-			console.error(`[DB] Error while getting all admin groups: ${err}`)
+			error(`[DB] Error while getting all admin groups: ${err}`)
 			return []
 		}
 	},
@@ -32,35 +30,41 @@ const Admins = {
 
 			return group
 		} catch (err) {
-			console.error(`[DB] Error while getting the admin group: ${err}`)
+			error(`[DB] Error while getting the admin group: ${err}`)
 			return null
 		}
 	},
-	create: async ({ id, name, flags, immunity }: SA_AdminGroup): Promise<number | null> => {
+	create: async (props: SA_AdminGroup): Promise<number | null> => {
 		try {
+			const keys = Object.keys(props)
+			const values = Object.values(props)
+
 			const [rows] = await db.query<ResultSetHeader>(
-				`INSERT INTO \`sa_admins_groups\` (${fields.join(', ')}, created) VALUES (${fields
+				`INSERT INTO \`sa_admins_groups\` (${keys.join(', ')}, created) VALUES (${keys
 					.map(() => '?')
 					.join(', ')}, NOW())`,
-				[id, name, flags.join(','), immunity]
+				values
 			)
 
 			return rows.insertId
 		} catch (err) {
-			console.error(`[DB] Error while creating admin group: ${err}`)
+			error(`[DB] Error while creating admin group: ${err}`)
 			throw err
 		}
 	},
-	update: async ({ id, name, flags, immunity }: SA_AdminGroup): Promise<boolean> => {
+	update: async (id: string, props: Partial<SA_AdminGroup>): Promise<boolean> => {
 		try {
+			const keys = Object.keys(props)
+			const values = Object.values(props)
+
 			const [rows] = await db.query<ResultSetHeader>(
-				`UPDATE \`sa_admins_groups\` SET ${fields.map((f) => `${f} = ?`).join(', ')} WHERE id = ?`,
-				[id, name, flags.join(','), immunity, id]
+				`UPDATE \`sa_admins_groups\` SET ${keys.map((f) => `${f} = ?`).join(', ')} WHERE id = ?`,
+				[...values, id]
 			)
 
 			return rows.affectedRows > 0
 		} catch (err) {
-			console.error(`[DB] Error while updating admin group: ${err}`)
+			error(`[DB] Error while updating admin group: ${err}`)
 			throw err
 		}
 	},
@@ -70,7 +74,7 @@ const Admins = {
 
 			return rows.affectedRows > 0
 		} catch (err) {
-			console.error(`[DB] Error while deleting admin group: ${err}`)
+			error(`[DB] Error while deleting admin group: ${err}`)
 			throw err
 		}
 	},
@@ -79,7 +83,7 @@ const Admins = {
 			const [rows] = await db.query<DB_Count[]>('SELECT COUNT(*) FROM `sa_admins_groups`')
 			return rows?.[0]?.['COUNT(*)']
 		} catch (err) {
-			console.error(`[DB] Error while counting admin groups: ${err}`)
+			error(`[DB] Error while counting admin groups: ${err}`)
 			return 0
 		}
 	},

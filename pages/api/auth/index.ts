@@ -25,8 +25,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 				}
 
 				return res.status(200).json({ user: req.user, admin })
-			} catch (error) {
-				console.error(error)
+			} catch (err) {
+				error(`GET /api/auth`, err)
 				return res.status(400).json({ error: 'Internal Server Error' })
 			}
 		}

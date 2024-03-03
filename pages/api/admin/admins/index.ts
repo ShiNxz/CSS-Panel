@@ -1,16 +1,18 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import type { Flag } from '@/utils/types/db/css'
+import { SendGlobalCommand } from '@/utils/functions/SendRcon'
 import query from '@/utils/functions/db'
 import router from '@/lib/Router'
 import adminSchema from '@/utils/schemas/adminSchema'
 import isAdminMiddleware from '@/utils/middlewares/isAdminMiddleware'
+import Log from '@/utils/lib/Logs'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 	await router.run(req, res)
 
 	const { method } = req
 
-	const isAdmin = await isAdminMiddleware(req, res, ['@css/root'])
+	const isAdmin = await isAdminMiddleware(req, res, ['@web/root', '@web/admins', '@css/root'], 'OR')
 	if (!isAdmin) return
 
 	switch (method) {
@@ -37,7 +39,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 				server_id: server_id ?? null,
 			})
 
-			// todo send a rcon command to update the admin on the servers
+			await SendGlobalCommand('css_reladmin')
+
+			Log('Admin Create', `Admin ${req.user?.displayName} (${req.user?.id}) created admin: ${player_name}`, req.user?.id)
 
 			return res.status(201).json(admin)
 		}

@@ -9,7 +9,7 @@ interface CSSP_Setting extends RowDataPacket {
 	lastChange: Date
 }
 
-interface CSSP_Log extends RowDataPacket {
+interface CSSP_Log {
 	id: number
 	title: string
 	message: string

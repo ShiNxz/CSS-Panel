@@ -1,17 +1,18 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import type { Flag } from '@/utils/types/db/css'
+import type { SA_Admin } from '@/utils/types/db/plugin'
 import query from '@/utils/functions/db'
 import router from '@/lib/Router'
 import adminSchema from '@/utils/schemas/adminSchema'
 import isAdminMiddleware from '@/utils/middlewares/isAdminMiddleware'
-import { SA_Admin } from '@/utils/types/db/plugin'
+import Log from '@/utils/lib/Logs'
+import { SendGlobalCommand } from '@/utils/functions/SendRcon'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 	await router.run(req, res)
 
 	const { method } = req
 
-	const isAdmin = await isAdminMiddleware(req, res, ['@css/root'])
+	const isAdmin = await isAdminMiddleware(req, res, ['@web/root', '@web/admins', '@css/root'], 'OR')
 	if (!isAdmin) return
 
 	const { id } = req.query as { id: string }
@@ -35,7 +36,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 				server_id: server_id ?? null,
 			})
 
-			// todo send a rcon command to update the admin on the servers
+			Log('Admin Edit', `Admin ${req.user?.displayName} (${req.user?.id}) edited admin: ${player_name}`, req.user?.id)
+
+			await SendGlobalCommand('css_reladmin')
 
 			return res.status(201).json(admin)
 		}
@@ -53,7 +56,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
 				await query.admins.delete(Number(id))
 
-				// todo send a rcon command to update the admin on the servers
+				await SendGlobalCommand('css_reladmin')
+
+				Log('Admin Delete', `Admin ${req.user?.displayName} (${req.user?.id}) deleted admin: ${admin.player_name}`, req.user?.id)
 
 				return res.status(201).send('Admin deleted')
 			} catch (error) {

@@ -5,6 +5,7 @@ import { From64ToUser } from 'steam-api-sdk'
 import isAdminMiddleware from '@/utils/middlewares/isAdminMiddleware'
 import query from '@/utils/functions/db'
 import router from '@/lib/Router'
+import Log from '@/utils/lib/Logs'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 	await router.run(req, res)
@@ -68,11 +69,24 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 					}: {default}${message}`
 				)
 
-				query.logs.create(
-					'chat',
-					`Sent message to server ${dbServer.hostname}: ${message} as ${hideName ? 'Anonymouse' : {}}`,
+				Log(
+					'Server Chat',
+					`Admin ${req.user?.displayName} (${req.user?.id}) Sent message to server ${
+						dbServer.hostname
+					}: ${message} as ${hideName ? 'Anonymouse' : ''}`,
 					req.user?.id
 				)
+
+				const created = new Date()
+
+				await query.chatLogs.create({
+					created,
+					message,
+					playerName: adminUser[0].personaname + ' (Panel)',
+					playerSteam64: adminUser[0].steamid,
+					serverId,
+					team: 0,
+				})
 
 				return res.status(200).send('Message sent')
 			} catch (error) {

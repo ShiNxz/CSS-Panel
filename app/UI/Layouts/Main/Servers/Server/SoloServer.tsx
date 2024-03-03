@@ -6,7 +6,7 @@ import { Button } from '@nextui-org/button'
 import { Image } from '@nextui-org/image'
 import { Card, CardBody } from '@nextui-org/card'
 import { Progress } from '@nextui-org/progress'
-import { IconCopy, IconError404, IconPlayerPlay, IconShield, IconShieldX } from '@tabler/icons-react'
+import { IconCopy, IconExclamationCircle, IconPlayerPlay, IconShield, IconShieldX } from '@tabler/icons-react'
 import { Tooltip } from '@nextui-org/tooltip'
 import { Spinner } from '@nextui-org/spinner'
 import { cn } from '@nextui-org/system'
@@ -150,7 +150,7 @@ const SoloServer = ({ id, hostname, address }: SA_Server) => {
 									size='sm'
 									isIconOnly
 								>
-									<IconError404 />
+									<IconExclamationCircle />
 								</Button>
 							</div>
 

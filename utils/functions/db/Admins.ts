@@ -23,7 +23,7 @@ const Admins = {
 
 			return rows
 		} catch (err) {
-			console.error(`[DB] Error while getting all admins: ${err}`)
+			error(`[DB] Error while getting all admins: ${err}`)
 			return []
 		}
 	},
@@ -40,7 +40,7 @@ const Admins = {
 
 			return admin
 		} catch (err) {
-			console.error(`[DB] Error while getting the admin: ${err}`)
+			error(`[DB] Error while getting the admin: ${err}`)
 			return null
 		}
 	},
@@ -57,7 +57,7 @@ const Admins = {
 
 			return admin
 		} catch (err) {
-			console.error(`[DB] Error while getting the admin: ${err}`)
+			error(`[DB] Error while getting the admin: ${err}`)
 			return null
 		}
 	},
@@ -79,7 +79,7 @@ const Admins = {
 
 			return rows
 		} catch (err) {
-			console.error(`[DB] Error while getting all admins: ${err}`)
+			error(`[DB] Error while getting all admins: ${err}`)
 			return []
 		}
 	},
@@ -87,7 +87,7 @@ const Admins = {
 		try {
 			// Since the serverId is a string, and the server_id is a string[] | null, we need to check if the serverId is in the array
 			const [rows] = await db.query<SA_AdminDB[]>(
-				`SELECT * FROM \`sa_admins\` WHERE player_steamid = ? AND FIND_IN_SET(?, \`server_id\`)`,
+				`SELECT * FROM \`sa_admins\` WHERE player_steamid = ? AND FIND_IN_SET(?, \`server_id\`) OR server_id IS NULL`,
 				[steam64, serverId]
 			)
 			if (!rows.length || rows.length < 1) return null
@@ -101,7 +101,7 @@ const Admins = {
 
 			return rows[0] || null
 		} catch (err) {
-			console.error(`[DB] Error while getting the admin: ${err}`)
+			error(`[DB] Error while getting the admin: ${err}`)
 			return null
 		}
 	},
@@ -123,7 +123,7 @@ const Admins = {
 
 			return rows.insertId
 		} catch (err) {
-			console.error(`[DB] Error while creating sa_admins: ${err}`)
+			error(`[DB] Error while creating sa_admins: ${err}`)
 			throw err
 		}
 	},
@@ -144,7 +144,7 @@ const Admins = {
 
 			return rows.affectedRows > 0
 		} catch (err) {
-			console.error(`[DB] Error while updating admin: ${err}`)
+			error(`[DB] Error while updating admin: ${err}`)
 			throw err
 		}
 	},
@@ -154,7 +154,7 @@ const Admins = {
 
 			return rows.affectedRows > 0
 		} catch (err) {
-			console.error(`[DB] Error while deleting admin: ${err}`)
+			error(`[DB] Error while deleting admin: ${err}`)
 			throw err
 		}
 	},
@@ -163,7 +163,7 @@ const Admins = {
 			const [rows] = await db.query<DB_Count[]>('SELECT COUNT(*) FROM `sa_admins`')
 			return rows?.[0]?.['COUNT(*)']
 		} catch (err) {
-			console.error(`[DB] Error while counting admins: ${err}`)
+			error(`[DB] Error while counting admins: ${err}`)
 			return 0
 		}
 	},

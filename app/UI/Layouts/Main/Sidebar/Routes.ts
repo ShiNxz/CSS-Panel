@@ -27,7 +27,6 @@ const ROUTES: Route[] = [
 		path: '/admin',
 		icon: IconServer,
 		admin: true,
-		flag: '@css/root',
 	},
 ]
 

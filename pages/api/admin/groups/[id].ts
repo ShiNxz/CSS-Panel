@@ -4,13 +4,15 @@ import query from '@/utils/functions/db'
 import router from '@/lib/Router'
 import adminGroupSchema from '@/utils/schemas/adminGroupSchema'
 import isAdminMiddleware from '@/utils/middlewares/isAdminMiddleware'
+import { SendGlobalCommand } from '@/utils/functions/SendRcon'
+import Log from '@/utils/lib/Logs'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 	await router.run(req, res)
 
 	const { method } = req
 
-	const isAdmin = await isAdminMiddleware(req, res, ['@css/root'])
+	const isAdmin = await isAdminMiddleware(req, res, ['@web/root', '@web/admingroups', '@css/root'], 'OR')
 	if (!isAdmin) return
 
 	const { id } = req.query as { id: string }
@@ -27,12 +29,15 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 					.status(403)
 					.json({ message: 'You cannot edit an admin group with higher immunity than yours' })
 
-			const adminGroup = await query.adminGroups.update({
-				id: id as `#${string}`,
+			const adminGroup = await query.adminGroups.update(id, {
 				name,
 				flags: flags as Flag[],
 				immunity: immunity.toString() ?? 0,
 			})
+
+			Log('Admin Group Edit', `Admin ${req.user?.displayName} (${req.user?.id}) created admin group: ${name}`, req.user?.id)
+
+			await SendGlobalCommand('css_reladmin')
 
 			return res.status(201).json(adminGroup)
 		}
@@ -49,6 +54,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 						.json({ message: 'You cannot delete an admin group with higher immunity than yours' })
 
 				await query.adminGroups.delete(`#${id}`)
+
+				Log('Admin Group Delete', `Admin ${req.user?.displayName} (${req.user?.id}) deleted admin group: ${adminGroup.name}`, req.user?.id)
+
+				await SendGlobalCommand('css_reladmin')
 
 				return res.status(201).send('Admin group deleted')
 			} catch (error) {

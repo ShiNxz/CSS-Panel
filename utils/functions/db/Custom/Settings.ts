@@ -1,6 +1,6 @@
 import type { CSSP_Setting } from '@/utils/types/db/panel'
-import db from '@/utils/lib/Mysql'
 import settingsSchema, { GetDefaultSettings, type Settings as ISettings } from '@/utils/schemas/settings'
+import db from '@/utils/lib/Mysql'
 
 const publicSettings: (keyof ISettings)[] = [
 	'title',
@@ -14,7 +14,7 @@ const publicSettings: (keyof ISettings)[] = [
 	'serversGrid',
 ]
 
-const booleanSettings: (keyof ISettings)[] = ['debugMode', 'earlyAccessFeatures', 'serversGrid']
+const booleanSettings: (keyof ISettings)[] = ['debugMode', 'earlyAccessFeatures', 'serversGrid', 'showAdminName']
 
 const Settings = {
 	/**
@@ -49,7 +49,7 @@ const Settings = {
 
 			return settings
 		} catch (err) {
-			console.error(`[DB] Error while getting all settings: ${err}`)
+			error(`[DB] Error while getting all settings: ${err}`)
 			return GetDefaultSettings()
 		}
 	},
@@ -59,10 +59,7 @@ const Settings = {
 
 			const [rows] = await db.query<CSSP_Setting[]>(`SELECT * FROM \`cssp_settings\` WHERE \`key\` LIKE '${key}'`)
 
-			// console.log(`[DB] Getting setting: ${key}`)
-
 			if (!rows.length || rows.length < 1) {
-				console.error(`[DB] Setting doesnt exists: ${key}`)
 				const defaultSettings = GetDefaultSettings()
 				return defaultSettings[key as keyof ISettings] as ISettings[K]
 			}
@@ -74,7 +71,7 @@ const Settings = {
 
 			return rows[0].value as ISettings[K]
 		} catch (err) {
-			console.error(`[DB] Error while getting setting: ${err}`)
+			error(`[DB] Error while getting setting: ${err}`)
 			const defaultSettings = GetDefaultSettings()
 			return defaultSettings[key as keyof ISettings] as ISettings[K]
 		}
@@ -94,7 +91,7 @@ const Settings = {
 				)
 			}
 		} catch (err) {
-			console.error(`[DB] Error while creating server: ${err}`)
+			error(`[DB] Error while creating server: ${err}`)
 		}
 	},
 }

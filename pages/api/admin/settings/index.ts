@@ -3,11 +3,12 @@ import query from '@/utils/functions/db'
 import router from '@/lib/Router'
 import isAdminMiddleware from '@/utils/middlewares/isAdminMiddleware'
 import settingsSchema from '@/utils/schemas/settings'
+import Log from '@/utils/lib/Logs'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 	await router.run(req, res)
 
-	const isAdmin = await isAdminMiddleware(req, res, ['@css/root'])
+	const isAdmin = await isAdminMiddleware(req, res, ['@web/root', '@css/root'], 'OR')
 	if (!isAdmin) return
 
 	const { method } = req
@@ -24,7 +25,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
 			await query.settings.update(settings)
 
-			query.logs.create('Settings updated', `Settings updated by ${req.user?.displayName}`, req.user?.id)
+			Log(
+				'Settings update',
+				`Admin ${req.user?.displayName} (${req.user?.id}) updated the panel settings`,
+				req.user?.id
+			)
 
 			return res.status(200).json({ message: 'Settings updated' })
 		}

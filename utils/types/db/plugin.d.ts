@@ -25,12 +25,14 @@ interface SA_AdminGroup {
 
 interface SA_Ban {
 	id: number
-	player_steamid?: string
-	player_name?: string
-	player_ip?: string
+	player_steamid?: string | null
+	player_name?: string | null
+	player_ip?: string | null
 	admin_steamid: string
 	admin_name: string
 	reason: string
+	unban_reason?: string | null
+	comment?: string
 	duration: number
 	ends: Date
 	created: Date
@@ -45,10 +47,12 @@ interface SA_Mute {
 	admin_steamid: string
 	admin_name: string
 	reason: string
+	unmute_reason?: string | null
+	comment?: string
 	duration: number
 	ends: Date
 	created: Date
-	type: 'GAG' | 'MUTE' | ''
+	type: 'GAG' | 'MUTE' | 'SILENCE' | ''
 	server_id?: number
 	status: 'ACTIVE' | 'UNMUTED' | 'EXPIRED' | ''
 }
@@ -60,7 +64,7 @@ interface SA_Server {
 	rcon?: string
 }
 
-// todo check if it also push when using the css_say/say command
+// todo check if it also push when using the css_say/say command, if yes, keep it like that but in the messages modal make sure to filter out the '/' startsWith messages
 // todo add index to serverId
 interface SA_ChatLog {
 	id: number

@@ -17,8 +17,8 @@ const Home = async () => {
 			{serversGrid ? <Servers /> : <ServersTable />}
 			<StatsGrid />
 			<div className='grid grid-cols-2 gap-6'>
-				<BansTable />
-				<MutesTable />
+				<BansTable type='SMALL' />
+				<MutesTable type='SMALL' />
 			</div>
 		</>
 	)

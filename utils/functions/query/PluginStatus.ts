@@ -1,6 +1,6 @@
 import { RCON } from '@fabricio-191/valve-server-query'
 
-const CURRENT_VERSION = '1.3.4'
+const CURRENT_VERSION = process.env.version
 
 /**
  * Get the status of the server **using RCON and the custom plugin command (css_query)**
@@ -22,32 +22,35 @@ const PluginStatus = async (ip: string, port: number, password: string): Promise
 		const status = await server.exec('css_query')
 		if (!status) return null
 
-		console.log({ status, length: status.length })
 		const parsedStatus = sanitizeJSON(status)
 
 		const jsonStatus = JSON.parse(parsedStatus) as PluginStatus
 		const { pluginVersion } = jsonStatus.server
 
 		if (pluginVersion !== CURRENT_VERSION) {
-			console.warn(
+			warn(
 				`[PluginStatus] The plugin version (${pluginVersion}) for ${ip}:${port} is outdated, the latest version is: ${CURRENT_VERSION}\n-> Download the latest version from: https://github.com/ShiNxz/CSS-Plugin`
 			)
 		}
 
 		return jsonStatus
 	} catch (e) {
-		console.error(
-			`[Error] getting Plugin RCON status: ${ip}:${port}: ${e}\nMake sure that the plugin is installed and the RCON is enabled.\n-> Download: https://github.com/ShiNxz/CSS-Plugin`
-		)
+		if ((e as any)?.message?.includes('Connection timeout')) {
+			warn(
+				`getting Plugin RCON status: ${ip}:${port}: ${e}\nMake sure that the server is running and the RCON is enabled.`
+			)
+		} else
+			warn(
+				`getting Plugin RCON status: ${ip}:${port}: ${e}\nMake sure that the plugin is installed and the RCON is enabled.\n-> Download: https://github.com/ShiNxz/CSS-Plugin`
+			)
 		return null
 	}
 }
 
-const sanitizeJSON = (input: string) => {
-	// This will replace any non-ASCII characters with a space
-	const output = input.replace(/[^\x20-\x7E]/g, ' ')
-	return output
-}
+/**
+ * This will replace any non-ASCII characters with a space
+ */
+const sanitizeJSON = (input: string) => input.replace(/[^\x20-\x7E]/g, ' ')
 
 export interface PluginServer {
 	map: string
@@ -78,7 +81,7 @@ export interface PluginPlayer {
 	// roundsWon: number
 	mvps: number
 	// time: number // currently doesnt work
-	avatar: string
+	// avatar: string
 }
 
 export interface PluginStatus {

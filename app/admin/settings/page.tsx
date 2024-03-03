@@ -7,12 +7,15 @@ import { Tabs, Tab } from '@nextui-org/tabs'
 import { Card, CardBody, CardHeader } from '@nextui-org/card'
 import { Button } from '@nextui-org/button'
 import { useEffect, useState } from 'react'
+import { usePathname } from 'next/navigation'
+import { ADMIN_TABS } from '../UI/Tabs'
 import { useQueryState } from 'nuqs'
 import adminSettingsStore from './store'
 import useSWR, { mutate } from 'swr'
 import fetcher from '@/utils/fetcher'
 import axios from 'axios'
 import tabs from './tabs'
+import AdminCheck from '../UI/AdminCheck'
 
 const Settings = () => {
 	const { data, isLoading } = useSWR<Settings>('/api/admin/settings', fetcher)
@@ -42,11 +45,14 @@ const Settings = () => {
 		setIsLoadingForm(false)
 	}
 
-	const currentTab = tabs.find((t) => t.id === tab) || tabs[0]
+	const currentTab = tabs.find((t) => t.label.toLowerCase() === tab) || tabs[0]
 	const Component = currentTab.content
 
+	const path = usePathname()
+	const route = ADMIN_TABS.find((t) => t.path === path)
+
 	return (
-		<>
+		<AdminCheck flags={route?.permissions || []}>
 			<Tabs
 				aria-label='Settings tabs'
 				items={tabs}
@@ -55,7 +61,7 @@ const Settings = () => {
 			>
 				{(item) => (
 					<Tab
-						key={item.id}
+						key={item.label.toLowerCase()}
 						title={item.label}
 					/>
 				)}
@@ -86,7 +92,7 @@ const Settings = () => {
 					</div>
 				</CardBody>
 			</Card>
-		</>
+		</AdminCheck>
 	)
 }
 

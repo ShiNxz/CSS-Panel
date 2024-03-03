@@ -3,13 +3,14 @@ import query from '@/utils/functions/db'
 import router from '@/lib/Router'
 import serverSchema from '@/utils/schemas/serverSchema'
 import isAdminMiddleware from '@/utils/middlewares/isAdminMiddleware'
+import Log from '@/utils/lib/Logs'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 	await router.run(req, res)
 
 	const { method } = req
 
-	const isAdmin = await isAdminMiddleware(req, res, ['@css/root'])
+	const isAdmin = await isAdminMiddleware(req, res, ['@web/root', '@web/servers', '@css/root'], 'OR')
 	if (!isAdmin) return
 
 	switch (method) {
@@ -23,6 +24,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 			const { hostname, address } = serverSchema.parse(req.body)
 
 			await query.servers.create({ hostname, address })
+
+			Log('Server Create', `Admin ${req.user?.displayName} (${req.user?.id}) created server: ${hostname}`, req.user?.id)
 
 			return res.status(201).send('Server created')
 		}

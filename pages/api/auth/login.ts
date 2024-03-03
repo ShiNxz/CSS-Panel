@@ -9,5 +9,5 @@ export default router
 	})
 	.get(
 		path,
-		p.authenticate('steam', (err: any) => console.log(err))
+		p.authenticate('steam', (err: any) => error(err))
 	)

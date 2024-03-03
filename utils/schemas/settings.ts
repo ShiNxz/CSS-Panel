@@ -13,6 +13,9 @@ const settingsSchema = z.object({
 	headerCodeCSS: z.string().optional().default(''),
 	earlyAccessFeatures: z.boolean().optional().default(false),
 	serversGrid: z.boolean().optional().default(true),
+	showAdminName: z.boolean().optional().default(false),
+	language: z.string().optional().default('en'),
+	discordWebhook: z.string().optional().default(''),
 })
 
 export type Settings = z.infer<typeof settingsSchema>

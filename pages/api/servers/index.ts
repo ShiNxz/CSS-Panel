@@ -18,7 +18,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 					const { id: serverId } = server
 
 					const serverInfo = await ServerQuery(serverId, isAdmin).catch((e) => {
-						console.error(`Error while querying server: ${serverId}, error: ${e}`)
+						error(`Error while querying server: ${serverId}, error: ${e}`)
 					})
 
 					if (!serverInfo) return null

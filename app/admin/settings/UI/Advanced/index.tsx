@@ -1,5 +1,6 @@
 import AdvancedSwitch from '@/app/UI/Layouts/Main/Inputs/AdvancedSwitch'
 import adminSettingsStore from '../../store'
+import { Input } from '@nextui-org/input'
 
 const AdvancedSettings = () => {
 	const settings = adminSettingsStore((state) => state.settings)
@@ -8,6 +9,20 @@ const AdvancedSettings = () => {
 
 	return (
 		<div className='grid grid-cols-4 gap-6'>
+			<Input
+				label='Discord Webhook'
+				value={settings.discordWebhook}
+				onValueChange={(discordWebhook) => setSettings({ ...settings, discordWebhook })}
+				disabled={isFormLoading}
+				className='col-span-4'
+				color={
+					settings.discordWebhook?.includes('/api/webhooks/')
+						? 'success'
+						: settings.discordWebhook.length > 0
+						? 'danger'
+						: 'default'
+				}
+			/>
 			<AdvancedSwitch
 				label='Enable early access features'
 				description='Get access to new features before they are released.'

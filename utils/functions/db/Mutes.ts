@@ -26,7 +26,7 @@ const Mutes = {
 			)
 			return rows
 		} catch (err) {
-			console.error(`[DB] Error while getting all mutes: ${err}`)
+			error(`[DB] Error while getting all mutes: ${err}`)
 			return []
 		}
 	},
@@ -36,83 +36,38 @@ const Mutes = {
 			if (!rows.length || rows.length < 1) return null
 			return rows[0]
 		} catch (err) {
-			console.error(`[DB] Error while getting all mutes: ${err}`)
+			error(`[DB] Error while getting all mutes: ${err}`)
 			return null
 		}
 	},
-	create: async ({
-		player_steamid,
-		player_name,
-		admin_steamid,
-		admin_name,
-		reason,
-		duration,
-		ends,
-		created,
-		server_id,
-		status,
-		type,
-	}: SA_Mute): Promise<number | null> => {
+	create: async (props: Partial<SA_Mute>): Promise<number | null> => {
 		try {
+			const keys = Object.keys(props)
+			const values = Object.values(props)
+
 			const [rows] = await db.query<ResultSetHeader>(
-				`INSERT INTO 'sa_mutes' (${fields.join(', ')}) VALUES (${fields.map(() => '?').join(', ')})`,
-				[
-					player_steamid,
-					player_name,
-					admin_steamid,
-					admin_name,
-					reason,
-					duration,
-					ends,
-					created,
-					server_id,
-					status,
-					type,
-				]
+				`INSERT INTO \`sa_mutes\` (${keys.join(', ')}) VALUES (${keys.map(() => '?').join(', ')})`,
+				values
 			)
 
 			return rows.insertId
 		} catch (err) {
-			console.error(`[DB] Error while creating mutes: ${err}`)
+			error(`[DB] Error while creating mutes: ${err}`)
 			return null
 		}
 	},
-	update: async ({
-		id,
-		player_steamid,
-		player_name,
-		admin_steamid,
-		admin_name,
-		reason,
-		duration,
-		ends,
-		created,
-		server_id,
-		status,
-		type,
-	}: SA_Mute): Promise<boolean> => {
+	update: async (id: number, props: Partial<SA_Mute>): Promise<boolean> => {
 		try {
+			const keys = Object.keys(props)
+
 			const [rows] = await db.query<ResultSetHeader>(
-				`UPDATE 'sa_mutes' SET ${fields.map((f) => `${f} = ?`).join(', ')} WHERE id = ?`,
-				[
-					player_steamid,
-					player_name,
-					admin_steamid,
-					admin_name,
-					reason,
-					duration,
-					ends,
-					created,
-					server_id,
-					status,
-					type,
-					id,
-				]
+				`UPDATE \`sa_mutes\` SET ${keys.map((f) => `${f} = ?`).join(', ')} WHERE id = ?`,
+				[...Object.values(props), id]
 			)
 
 			return rows.affectedRows > 0
 		} catch (err) {
-			console.error(`[DB] Error while updating mutes: ${err}`)
+			error(`[DB] Error while updating mutes: ${err}`)
 			return false
 		}
 	},
@@ -122,7 +77,7 @@ const Mutes = {
 
 			return rows.affectedRows > 0
 		} catch (err) {
-			console.error(`[DB] Error while deleting mute: ${err}`)
+			error(`[DB] Error while deleting mute: ${err}`)
 			return false
 		}
 	},
@@ -131,7 +86,7 @@ const Mutes = {
 			const [rows] = await db.query<DB_Count[]>('SELECT COUNT(*) FROM `sa_mutes`')
 			return rows?.[0]?.['COUNT(*)']
 		} catch (err) {
-			console.error(`[DB] Error while counting mutes: ${err}`)
+			error(`[DB] Error while counting mutes: ${err}`)
 			return 0
 		}
 	},

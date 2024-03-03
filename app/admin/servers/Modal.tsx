@@ -91,7 +91,7 @@ const ServerModal = () => {
 								errorMessage={form.errors.rcon}
 								label='Rcon Password'
 								placeholder='123456789'
-								type='text'
+								type='password'
 								variant='bordered'
 								disabled={isLoading}
 							/>

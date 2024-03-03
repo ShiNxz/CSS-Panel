@@ -18,6 +18,7 @@ const queryParamsSchema = z.object({
 			message: 'Rows must be less than 50',
 		})
 		.transform((val) => Number(val)),
+	query: z.string().optional(),
 })
 
 export default queryParamsSchema

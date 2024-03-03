@@ -4,13 +4,14 @@ import query from '@/utils/functions/db'
 import router from '@/lib/Router'
 import adminGroupSchema from '@/utils/schemas/adminGroupSchema'
 import isAdminMiddleware from '@/utils/middlewares/isAdminMiddleware'
+import Log from '@/utils/lib/Logs'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 	await router.run(req, res)
 
 	const { method } = req
 
-	const isAdmin = await isAdminMiddleware(req, res, ['@css/root'])
+	const isAdmin = await isAdminMiddleware(req, res, ['@web/root', '@web/admingroups', '@css/root'], 'OR')
 	if (!isAdmin) return
 
 	switch (method) {
@@ -25,7 +26,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
 			const userImmunity = isAdmin.immunity
 			if (Number(immunity) >= Number(userImmunity))
-				return res.status(403).json({ message: 'You cannot create an admin group with higher immunity than yours' })
+				return res
+					.status(403)
+					.json({ message: 'You cannot create an admin group with higher immunity than yours' })
 
 			const group = await query.adminGroups.create({
 				id: id as `#${string}`,
@@ -33,6 +36,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 				flags: flags as Flag[],
 				immunity,
 			})
+
+			Log('Admin Group Create', `Admin ${req.user?.displayName} (${req.user?.id}) created admin group: ${name}`, req.user?.id)
 
 			return res.status(201).json(group)
 		}

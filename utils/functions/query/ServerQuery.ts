@@ -3,6 +3,7 @@ import { From64ToUser } from 'steam-api-sdk'
 import PluginStatus from './PluginStatus'
 import query from '../db'
 import GetServerInfo from './ServerStatus'
+import GetSteamUsers from '../GetSteamUsers'
 
 /**
  * * The main function to query a server, includes the chat logs and the players
@@ -28,19 +29,23 @@ const ServerQuery = async (serverId: number, advanced?: boolean): Promise<SafeSe
 		// Get the chat logs of 5 minutes ago
 		const chatMessages = advanced ? await query.chatLogs.getAllByServerAndMinutes(Number(serverId), 5) : []
 
-	const newPlayers: PlayerInfo[] = await Promise.all(
+		const steamPlayers = await GetSteamUsers(players.map((p) => p.steam64))
+
+		const newPlayers: PlayerInfo[] = await Promise.all(
 			players.map(async (player) => {
-				const { userId, playerName, steam64, score, ping, avatar, kills, deaths, mvps } = player
+				const { userId, playerName, steam64, score, ping, kills, deaths, mvps } = player
 
 				// Check if the player is an admin
 				const admin = await query.admins.getBySteam64AndServerId(steam64, serverId)
 
+				const steam = steamPlayers.find((p) => p.steamid === steam64)
+
 				return {
 					userId,
-					playerName,
+					playerName: steam ? steam.personaname : playerName,
+					avatar: steam ? steam.avatar : '',
 					steam64,
 					score,
-					avatar,
 					ping,
 					admin: advanced ? admin : null,
 					kills,
@@ -73,22 +78,22 @@ const ServerQuery = async (serverId: number, advanced?: boolean): Promise<SafeSe
 		// Get the chat logs of 5 minutes ago
 		const chatMessages = advanced ? await query.chatLogs.getAllByServerAndMinutes(Number(serverId), 5) : []
 
-		const steamIds = info.serverPlayers?.map((player) => player.steamId64)
-		const steamProfiles = steamIds ? await From64ToUser(steamIds) : []
+		const steamPlayers = await GetSteamUsers(info.serverPlayers?.map((player) => player.steamId64) || [])
 
 		const players: PlayerInfo[] | number = info.serverPlayers
 			? await Promise.all(
 					info.serverPlayers?.map(async (player) => {
 						const { id, name, steamId64 } = player
-						const profile = steamProfiles?.find((profile) => profile.steamid === steamId64)
-						const avatar = profile?.avatarfull || ''
+
 						const admin = await query.admins.getBySteam64AndServerId(steamId64, Number(serverId))
+
+						const steam = steamPlayers.find((p) => p.steamid === steamId64)
 
 						return {
 							userId: id,
-							playerName: name,
 							steam64: steamId64,
-							avatar,
+							playerName: steam ? steam.personaname : name,
+							avatar: steam ? steam.avatar : '',
 							ping: 0,
 							admin: advanced ? admin : null,
 						}

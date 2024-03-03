@@ -116,7 +116,7 @@ const ServerChatModal = () => {
 									>
 										<Button
 											variant='flat'
-											size='lg'
+											size='sm'
 											color='secondary'
 											onClick={() => {
 												setHideName(!hideName)
@@ -125,16 +125,6 @@ const ServerChatModal = () => {
 											{hideName ? 'Hide Name' : 'Show Name'}
 										</Button>
 									</Tooltip>
-
-									<Button
-										isLoading={isLoading || isMessagesLoading}
-										size='lg'
-										type='submit'
-										variant='solid'
-										color='primary'
-									>
-										Send
-									</Button>
 								</ModalFooter>
 							</form>
 						)

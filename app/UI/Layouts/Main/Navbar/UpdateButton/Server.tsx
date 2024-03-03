@@ -1,10 +1,11 @@
 import axios from 'axios'
 import UpdateButtonClient from './Client'
 
-export const dynamic = 'force-dynamic'
+export const revalidate = 3600
 
 const UpdateButton = async () => {
-	const tags = await axios.get('https://api.github.com/repos/ShiNxz/CSS-Panel/tags')
+	const tags = await axios.get('https://api.github.com/repos/ShiNxz/CSS-Panel/tags').catch(() => null)
+	debug('Github: Checking for updates')
 	if (!tags || !tags.data) return <UpdateButtonClient />
 
 	const latestVersion = tags.data[0].name as string

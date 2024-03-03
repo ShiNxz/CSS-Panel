@@ -21,10 +21,10 @@ export type Env = z.infer<typeof envSchema>
 const CheckENV = () => {
 	try {
 		envSchema.parse(process.env)
-	} catch (error) {
-		const validationError = fromZodError(error as z.ZodError)
+	} catch (err) {
+		const validationError = fromZodError(err as z.ZodError)
 
-		console.log(
+		error(
 			`[ENV] .env file is missing or its missing one of the following values, please check .env.example file for more info:\n\n${validationError.toString()}\n\n`
 		)
 

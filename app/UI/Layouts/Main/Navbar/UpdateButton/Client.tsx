@@ -16,7 +16,7 @@ const UpdateButtonClient = () => {
 				<Button
 					size='sm'
 					variant='faded'
-					color='secondary'
+					color='primary'
 					className='ml-6'
 					onClick={() => setModal(true)}
 				>
@@ -41,7 +41,7 @@ const UpdateButtonClient = () => {
 										<Button
 											variant='solid'
 											color='primary'
-											onClick={() => setModal(false)}
+											onClick={onClose}
 										>
 											Update
 										</Button>

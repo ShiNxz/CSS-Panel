@@ -22,11 +22,11 @@ const GetServerInfo = async (ip: string, port: number, rcon?: string): Promise<S
 		const { name, map, game, players, VAC, version } = info
 
 		if (rcon)
-			console.log(
+			debug(
 				`RCON Found for server ${ip}:${port}, the server info will be pulled with RCON.\nNote that you can should consider using our official plugin to get more information and features.\nhttps://github.com/ShiNxz/CSS-Plugin`
 			)
 		else
-			console.log(
+			log(
 				`RCON not found for server ${ip}:${port}, the server info will be pulled without RCON, this means that players and advanced information modal will not be shown.\nConsider using our official plugin to get more information and features.\nhttps://github.com/ShiNxz/CSS-Plugin`
 			)
 
@@ -49,7 +49,7 @@ const GetServerInfo = async (ip: string, port: number, rcon?: string): Promise<S
 			game,
 		}
 	} catch (e) {
-		console.error(`[Error] getting server info: ${ip}:${port}: ${e}`)
+		error(`[Error] getting server info: ${ip}:${port}: ${e}`)
 		return null
 	}
 }

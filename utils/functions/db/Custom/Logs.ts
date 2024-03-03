@@ -1,22 +1,30 @@
 import type { CSSP_Log, CSSP_LogExtended } from '@/utils/types/db/panel'
+import type { DB_Count } from '@/utils/types/db/plugin'
+import type { RowDataPacket } from 'mysql2'
 import { From64ToUser } from 'steam-api-sdk'
 import db from '@/utils/lib/Mysql'
 import Admins from '../Admins'
 
+interface CSSP_LogDB extends CSSP_Log, RowDataPacket {}
+
 const Logs = {
-	getAll: async (): Promise<CSSP_Log[]> => {
+	getAll: async (page: number, limit: number, query?: string): Promise<CSSP_Log[]> => {
 		try {
-			const [rows] = await db.query<CSSP_Log[]>('SELECT * FROM `cssp_logs`')
+			const [rows] = await db.query<CSSP_LogDB[]>(
+				`SELECT * FROM \`cssp_logs\`  ${
+					query && query.length > 2 ? `WHERE title LIKE '%${query}%' OR message LIKE '%${query}%'` : ''
+				} ORDER BY \`id\` DESC LIMIT ${limit} OFFSET ${(page - 1) * limit}`
+			)
 
 			return rows
 		} catch (err) {
-			console.error(`[DB] Error while getting all logs: ${err}`)
+			error(`[DB] Error while getting all logs: ${err}`)
 			return []
 		}
 	},
-	getAllMapped: async (): Promise<CSSP_LogExtended[]> => {
+	getAllMapped: async (page: number, limit: number, query?: string): Promise<CSSP_LogExtended[]> => {
 		try {
-			const logs = await Logs.getAll()
+			const logs = await Logs.getAll(page, limit, query)
 			const steamIds: string[] = []
 
 			const mappedLogs: CSSP_LogExtended[] = await Promise.all(
@@ -44,17 +52,17 @@ const Logs = {
 
 			return mappedLogs
 		} catch (err) {
-			console.error(`[DB] Error while getting all logs: ${err}`)
+			error(`[DB] Error while getting all logs: ${err}`)
 			return []
 		}
 	},
 	getByAdmin: async (adminId: number): Promise<CSSP_Log[]> => {
 		try {
-			const [rows] = await db.query<CSSP_Log[]>(`SELECT * FROM \`cssp_logs\` WHERE \`aid\` = ?`, [adminId])
+			const [rows] = await db.query<CSSP_LogDB[]>(`SELECT * FROM \`cssp_logs\` WHERE \`aid\` = ?`, [adminId])
 
 			return rows
 		} catch (err) {
-			console.error(`[DB] Error while getting log: ${err}`)
+			error(`[DB] Error while getting log: ${err}`)
 			return []
 		}
 	},
@@ -65,11 +73,11 @@ const Logs = {
 			if (!adminId) return null
 
 			// Get the logs
-			const [rows] = await db.query<CSSP_Log[]>(`SELECT * FROM \`cssp_logs\` WHERE \`aid\` = ?`, [adminId])
+			const [rows] = await db.query<CSSP_LogDB[]>(`SELECT * FROM \`cssp_logs\` WHERE \`aid\` = ?`, [adminId])
 
 			return rows
 		} catch (err) {
-			console.error(`[DB] Error while getting log: ${err}`)
+			error(`[DB] Error while getting log: ${err}`)
 			return []
 		}
 	},
@@ -93,8 +101,21 @@ const Logs = {
 
 			return true
 		} catch (err) {
-			console.error(`[DB] Error while creating log: ${err}`)
+			error(`[DB] Error while creating log: ${err}`)
 			return false
+		}
+	},
+	count: async (query?: string): Promise<number> => {
+		try {
+			const [rows] = await db.query<DB_Count[]>(
+				'SELECT COUNT(*) FROM `cssp_logs` ' +
+					(query ? `WHERE title LIKE '%${query}%' OR message LIKE '%${query}%'` : '')
+			)
+
+			return rows?.[0]?.['COUNT(*)']
+		} catch (err) {
+			error(`[DB] Error while counting logs: ${err}`)
+			return 0
 		}
 	},
 }

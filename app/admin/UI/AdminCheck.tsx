@@ -12,7 +12,11 @@ const AdminCheck: React.FC<{ children: React.ReactNode; flags: Flag[] }> = ({ ch
 
 	useEffect(() => {
 		if (!isLoading) {
-			if (!admin || !flags.every((flag) => admin.flags?.includes(flag))) router.push('/')
+			if (!admin) return router.push('/')
+
+			if (flags.length > 0) {
+				if (!flags.some((flag) => admin.flags?.includes(flag))) return router.push('/admin')
+			}
 		}
 	}, [admin, isLoading, router, flags])
 

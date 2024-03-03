@@ -50,7 +50,7 @@ const PlayerStatus = async (ip: string, port: number, password: string): Promise
 		// Filter out empty names (bots)
 		return players
 	} catch (e) {
-		console.error(`Error getting RCON status: ${ip}:${port}`, e)
+		error(`Error getting RCON status: ${ip}:${port}`, e)
 		return null
 	}
 }

@@ -10,12 +10,16 @@ passport.deserializeUser(async (obj, done: any) => {
 })
 
 if (!process.env.STEAM_API_KEY) throw new Error('No Steam API key provided')
+if (!process.env.DOMAIN) throw new Error('No DOMAIN provided')
+
+let domain = process.env.DOMAIN
+if (!domain.startsWith('http')) domain = `https://${domain}`
 
 passport.use(
 	new SteamStrategy(
 		{
-			returnURL: `${process.env.DOMAIN}/api/auth/return`,
-			realm: `${process.env.DOMAIN}/`,
+			returnURL: `${domain}/api/auth/return`,
+			realm: `${domain}/`,
 			apiKey: process.env.STEAM_API_KEY,
 			stateless: true,
 		},

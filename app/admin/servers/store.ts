@@ -8,6 +8,8 @@ const useManageServersStore = create<Store>((set) => ({
 	setEdit: (edit) => set({ edit, open: true }),
 	delete: null,
 	setDelete: (server) => set({ delete: server }),
+	rcon: null,
+	setRcon: (rcon) => set({ rcon }),
 }))
 
 interface Store {
@@ -17,6 +19,8 @@ interface Store {
 	setEdit: (edit: SA_Server) => void
 	delete: null | SA_Server
 	setDelete: (server: SA_Server | null) => void
+	rcon: null | number
+	setRcon: (rcon: number | null) => void
 }
 
 export default useManageServersStore

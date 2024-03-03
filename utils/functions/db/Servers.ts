@@ -12,7 +12,7 @@ const Servers = {
 			const [rows] = await db.query<SA_ServerDB[]>('SELECT * FROM `sa_servers`')
 			return rows
 		} catch (err) {
-			console.error(`[DB] Error while getting all servers: ${err}`)
+			error(`[DB] Error while getting all servers: ${err}`)
 			return []
 		}
 	},
@@ -21,7 +21,7 @@ const Servers = {
 			const [rows] = await db.query<SA_ServerDB[]>('SELECT id, hostname, address FROM `sa_servers`')
 			return rows
 		} catch (err) {
-			console.error(`[DB] Error while getting all servers: ${err}`)
+			error(`[DB] Error while getting all servers: ${err}`)
 			return []
 		}
 	},
@@ -31,7 +31,7 @@ const Servers = {
 			if (!rows.length || rows.length < 1) return null
 			return rows[0]
 		} catch (err) {
-			console.error(`[DB] Error while getting all servers: ${err}`)
+			error(`[DB] Error while getting all servers: ${err}`)
 			return null
 		}
 	},
@@ -44,20 +44,23 @@ const Servers = {
 
 			return rows.insertId
 		} catch (err) {
-			console.error(`[DB] Error while creating server: ${err}`)
+			error(`[DB] Error while creating server: ${err}`)
 			throw err
 		}
 	},
-	update: async ({ id, hostname, address }: SA_Server): Promise<boolean> => {
+	update: async (id: number, props: Partial<SA_Server>): Promise<boolean> => {
 		try {
+			const keys = Object.keys(props)
+			const values = Object.values(props)
+
 			const [rows] = await db.query<ResultSetHeader>(
-				'UPDATE `sa_servers` SET hostname = ?, address = ? WHERE id = ?',
-				[hostname, address, id]
+				`UPDATE \`sa_servers\` SET ${keys.map((f) => `${f} = ?`).join(', ')} WHERE id = ?`,
+				[...values, id]
 			)
 
 			return rows.affectedRows > 0
 		} catch (err) {
-			console.error(`[DB] Error while updating server: ${err}`)
+			error(`[DB] Error while updating server: ${err}`)
 			throw err
 		}
 	},
@@ -67,7 +70,7 @@ const Servers = {
 
 			return rows.affectedRows > 0
 		} catch (err) {
-			console.error(`[DB] Error while deleting server: ${err}`)
+			error(`[DB] Error while deleting server: ${err}`)
 			throw err
 		}
 	},
@@ -76,7 +79,7 @@ const Servers = {
 			const [rows] = await db.query<DB_Count[]>('SELECT COUNT(*) FROM `sa_servers`')
 			return rows?.[0]?.['COUNT(*)']
 		} catch (err) {
-			console.error(`[DB] Error while counting admins: ${err}`)
+			error(`[DB] Error while counting admins: ${err}`)
 			return 0
 		}
 	},

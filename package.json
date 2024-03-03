@@ -1,7 +1,7 @@
 {
 	"name": "css-panel",
 	"author": "ShiNxz",
-	"version": "0.9.5",
+	"version": "0.9.7",
 	"private": true,
 	"scripts": {
 		"pull": "git pull",
@@ -15,6 +15,7 @@
 		"@fabricio-191/valve-server-query": "^4.1.9",
 		"@mantine/form": "^7.5.0",
 		"@monaco-editor/react": "^4.6.0",
+		"@nextui-org/autocomplete": "^2.0.9",
 		"@nextui-org/button": "2.0.26",
 		"@nextui-org/card": "^2.0.24",
 		"@nextui-org/checkbox": "^2.0.25",
@@ -43,6 +44,7 @@
 		"@nextui-org/user": "^2.0.25",
 		"@tabler/icons-react": "^2.46.0",
 		"axios": "^1.6.5",
+		"chalk": "^5.3.0",
 		"clsx": "^2.0.0",
 		"cookie-session": "^2.0.0",
 		"cookies": "^0.9.1",
@@ -59,9 +61,10 @@
 		"react-dom": "^18.2.0",
 		"react-hot-toast": "^2.4.1",
 		"sass": "^1.70.0",
-		"steam-api-sdk": "^1.4.1",
+		"steam-api-sdk": "^1.4.5",
 		"swr": "^2.2.4",
 		"tailwind-variants": "^0.1.18",
+		"use-debounce": "^10.0.0",
 		"zod": "^3.22.4",
 		"zod-validation-error": "^3.0.0",
 		"zustand": "^4.5.0"

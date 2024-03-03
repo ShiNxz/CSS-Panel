@@ -17,6 +17,7 @@ const DesignSettings = () => {
 				className='max-w-xs'
 				onChange={(theme) => setSettings({ ...settings, theme: theme.target.value })}
 				disabled={isFormLoading}
+				disallowEmptySelection
 			>
 				{THEMES_OPTIONS.map((option) => (
 					<SelectItem

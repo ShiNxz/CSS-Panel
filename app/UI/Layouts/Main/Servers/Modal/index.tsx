@@ -1,14 +1,17 @@
 'use client'
 
-import type { PlayerInfo } from '@/utils/functions/query/ServerQuery'
+import type { PlayerInfo, SafeServerInfo } from '@/utils/functions/query/ServerQuery'
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from '@nextui-org/table'
 import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from '@nextui-org/modal'
 import { User } from '@nextui-org/user'
 import { Chip } from '@nextui-org/chip'
 import { IconBan, IconCrown } from '@tabler/icons-react'
-import { useCallback, useState } from 'react'
 import { Input } from '@nextui-org/input'
+import { Button } from '@nextui-org/button'
 import { mutate } from 'swr'
+import { z } from 'zod'
+import { Select, SelectItem } from '@nextui-org/select'
+import { MUTE_OPTIONS } from '../../Mutes'
 import useContextMenu from '@/utils/hooks/useContextMenu'
 import ContextMenu from '@/app/UI/General/ContextMenu'
 import Link from 'next/link'
@@ -17,72 +20,49 @@ import useAuth from '@/utils/hooks/useAuth'
 import ConfirmationModal from '../../../../General/ConfirmationModal'
 import axios from 'axios'
 import toast from 'react-hot-toast'
+import useActionStore, { serverBanSchema, serverKickSchema, serverMuteSchema } from './Store'
+import GetDateTimeString from '@/utils/functions/GetDateTimeString'
 
 const ServerModal = () => {
 	const modal = useServersStore((state) => state.modal)
 	const setModal = useServersStore((state) => state.setModal)
 	const setChatModal = useServersStore((state) => state.setChatModal)
 
-	const [kickPlayer, setKickPlayer] = useState({
-		open: false,
-		isLoading: false,
-		reason: '',
-	})
-
-	const [banPlayer, setBanPlayer] = useState({
-		open: false,
-		isLoading: false,
-		reason: '',
-		duration: '0',
-	})
+	const action = useActionStore((state) => state.action)
+	const setAction = useActionStore((state) => state.setAction)
+	const details = useActionStore((state) => state.details)
+	const setDetails = useActionStore((state) => state.setDetails)
+	const isLoading = useActionStore((state) => state.isLoading)
+	const setIsLoading = useActionStore((state) => state.setIsLoading)
+	const reset = useActionStore((state) => state.reset)
 
 	const { admin } = useAuth()
 
 	const { open, server } = modal
 	const handleClose = () => setModal({ ...modal, open: false })
 
-	const handleKickPlayer = async () => {
-		if (!kickPlayer.open || kickPlayer.isLoading || !server || !selectedPlayer) return
+	const handleAction = async () => {
+		if (!action || isLoading || !server || !details || !selectedPlayer) return
 
-		setKickPlayer((prev) => ({ ...prev, isLoading: true }))
-
-		try {
-			await axios.post(`/api/servers/${server.id}/action`, {
-				action: 'kick',
-				userId: selectedPlayer.userId,
-				details: kickPlayer.reason,
-			})
-
-			await mutate(`/api/servers/${server.id}`)
-			setKickPlayer((prev) => ({ ...prev, open: false, reason: '' }))
-			toast.success('Player kicked successfully')
-		} catch (error) {
-			toast.error('Error kicking player')
-		}
-
-		setKickPlayer((prev) => ({ ...prev, isLoading: false }))
-	}
-
-	const handleBanPlayer = async () => {
-		if (!banPlayer.open || banPlayer.isLoading || !server || !selectedPlayer) return
-
-		setBanPlayer((prev) => ({ ...prev, isLoading: true }))
+		setIsLoading(true)
 
 		try {
 			await axios.post(`/api/servers/${server.id}/action`, {
-				action: 'ban',
+				action,
 				userId: selectedPlayer.userId,
-				details: { reason: banPlayer.reason, duration: Number(banPlayer.duration) },
+				details,
 			})
 
-			await mutate(`/api/servers/${server.id}`)
-			setBanPlayer((prev) => ({ ...prev, open: false, reason: '' }))
-			toast.success('Player banned successfully')
+			await new Promise((resolve) => setTimeout(resolve, 4000))
+			const newInfo = await mutate<SafeServerInfo>(`/api/servers/${server.id}`)
+			if (newInfo) setModal({ ...modal, server: newInfo })
+			toast.success(`Player ${action}ed successfully`)
+			reset()
 		} catch (error) {
-			toast.error('Error kicking player')
+			toast.error(`Error ${action}ing player`)
 		}
 
-		setBanPlayer((prev) => ({ ...prev, isLoading: false }))
+		setIsLoading(false)
 	}
 
 	const {
@@ -94,7 +74,7 @@ const ServerModal = () => {
 		info: selectedPlayer,
 	} = useContextMenu<PlayerInfo>()
 
-	const renderCell = useCallback((player: PlayerInfo, columnKey: keyof PlayerInfo) => {
+	const renderCell = (player: PlayerInfo, columnKey: keyof PlayerInfo) => {
 		switch (columnKey) {
 			case 'userId':
 				return (
@@ -157,12 +137,12 @@ const ServerModal = () => {
 				)
 
 			case 'admin':
-				return <span>{player.admin ? <IconCrown /> : '-'}</span>
+				return <span>{player.admin ? <IconCrown size={20} /> : '-'}</span>
 
 			default:
 				return <></>
 		}
-	}, [])
+	}
 
 	return (
 		<Modal
@@ -170,7 +150,7 @@ const ServerModal = () => {
 			isOpen={open}
 			onOpenChange={() => {
 				if (contextMenuOpen) return
-				if (kickPlayer.open) return
+				if (action) return
 				handleClose()
 			}}
 		>
@@ -180,7 +160,7 @@ const ServerModal = () => {
 						<>
 							<ModalHeader className='flex flex-col text-center gap-1'>
 								<h2>{server.hostname}</h2>
-								<span className='font-normal text-foreground-700'>
+								<span className='font-normal text-foreground-700 text-sm'>
 									{server.map}
 									<br />
 									{typeof server.players === 'number' ? server.players : server.players.length}/
@@ -198,6 +178,7 @@ const ServerModal = () => {
 										<TableColumn key='mvps'>MVP</TableColumn>
 										<TableColumn key='score'>Score</TableColumn>
 										<TableColumn key='ping'>Ping</TableColumn>
+										<TableColumn key='admin'>Admin</TableColumn>
 									</TableHeader>
 									<TableBody items={typeof server.players !== 'number' ? server.players : []}>
 										{(item) => (
@@ -224,7 +205,7 @@ const ServerModal = () => {
 								)}
 							</ModalBody>
 							<ModalFooter>
-								{/* {admin && (
+								{admin && (
 									<Button
 										color='secondary'
 										variant='flat'
@@ -245,7 +226,7 @@ const ServerModal = () => {
 									passHref
 								>
 									<Button color='primary'>Connect</Button>
-								</Link> */}
+								</Link>
 							</ModalFooter>
 						</>
 					)
@@ -253,41 +234,131 @@ const ServerModal = () => {
 			</ModalContent>
 			{admin && (
 				<ConfirmationModal
-					open={kickPlayer.open}
-					handleClose={() => setKickPlayer({ ...kickPlayer, open: false })}
-					action={handleKickPlayer}
-					isLoading={kickPlayer.isLoading}
+					open={action === 'kick'}
+					handleClose={reset}
+					action={handleAction}
+					isLoading={isLoading}
 					actionText='Kick'
 				>
 					<div>Are you sure you want to kick {selectedPlayer?.playerName}?</div>
 					<Input
 						placeholder='Reason'
-						value={kickPlayer.reason}
-						onValueChange={(reason) => setKickPlayer({ ...kickPlayer, reason })}
+						value={(details as z.infer<typeof serverKickSchema>) || ''}
+						onValueChange={(reason) => setDetails(reason)}
 					/>
 				</ConfirmationModal>
 			)}
 			{admin && (
 				<ConfirmationModal
-					open={banPlayer.open}
-					handleClose={() => setBanPlayer({ ...banPlayer, open: false })}
-					action={handleBanPlayer}
-					isLoading={banPlayer.isLoading}
+					open={action === 'ban'}
+					handleClose={reset}
+					action={handleAction}
+					isLoading={isLoading}
 					actionText='Ban'
 				>
 					<div>Are you sure you want to ban {selectedPlayer?.playerName}?</div>
 					<Input
 						placeholder='Reason'
-						value={banPlayer.reason}
-						onValueChange={(reason) => setBanPlayer({ ...banPlayer, reason })}
+						value={(details as z.infer<typeof serverBanSchema>)?.reason || ''}
+						onValueChange={(reason) =>
+							setDetails({ ...(details as z.infer<typeof serverBanSchema>), reason })
+						}
 					/>
 					<Input
 						placeholder='Time (in minutes)'
 						type='number'
-						value={banPlayer.duration}
-						onValueChange={(duration) => setBanPlayer({ ...banPlayer, duration })}
+						value={(details as z.infer<typeof serverBanSchema>)?.duration?.toString() || ''}
+						onValueChange={(duration) =>
+							setDetails({ ...(details as z.infer<typeof serverBanSchema>), duration: Number(duration) })
+						}
 						description='Time in minutes, 0 = Permanent ban'
 					/>
+
+					<div className='flex flex-col text-xs'>
+						<span>
+							The ban will start at <b>{GetDateTimeString()}</b>
+						</span>
+						<span>
+							the ban will end at{' '}
+							<b>
+								{(details as z.infer<typeof serverBanSchema>)?.duration?.toString() === '0' ? (
+									<b className='text-red-700'>Permanent</b>
+								) : (
+									GetDateTimeString(
+										new Date().getTime() +
+											Number((details as z.infer<typeof serverBanSchema>)?.duration) * 60000
+									)
+								)}
+							</b>
+						</span>
+					</div>
+				</ConfirmationModal>
+			)}
+			{admin && (
+				<ConfirmationModal
+					open={action === 'mute'}
+					handleClose={reset}
+					action={handleAction}
+					isLoading={isLoading}
+					actionText='Mute'
+				>
+					<div>Are you sure you want to mute {selectedPlayer?.playerName}?</div>
+					<Input
+						placeholder='Reason'
+						value={(details as z.infer<typeof serverMuteSchema>)?.reason || ''}
+						onValueChange={(reason) =>
+							setDetails({ ...(details as z.infer<typeof serverMuteSchema>), reason })
+						}
+					/>
+					<Select
+						label='Type'
+						placeholder='Select the mute type'
+						selectedKeys={[(details as z.infer<typeof serverMuteSchema>)?.type]}
+						onChange={(newType) =>
+							setDetails({
+								...(details as z.infer<typeof serverMuteSchema>),
+								type: newType.target.value as z.infer<typeof serverMuteSchema>['type'],
+							})
+						}
+						disallowEmptySelection
+					>
+						{MUTE_OPTIONS.map((option) => (
+							<SelectItem
+								key={option.value}
+								value={option.value}
+							>
+								{option.name}
+							</SelectItem>
+						))}
+					</Select>
+					<Input
+						placeholder='Time (in minutes)'
+						type='number'
+						value={(details as z.infer<typeof serverMuteSchema>)?.duration?.toString() || ''}
+						onValueChange={(duration) =>
+							setDetails({ ...(details as z.infer<typeof serverMuteSchema>), duration: Number(duration) })
+						}
+						description='Time in minutes, 0 = Permanent mute'
+					/>
+
+					<div className='flex flex-col text-xs'>
+						<span>
+							The mute will start again at <b>{GetDateTimeString()}</b>
+						</span>
+						<span>
+							the mute will end at{' '}
+							<b>
+								{(details as z.infer<typeof serverMuteSchema>)?.duration?.toString() === '0' ? (
+									<b className='text-red-700'>Permanent</b>
+								) : (
+									GetDateTimeString(
+										new Date().getTime() +
+											Number((details as z.infer<typeof serverMuteSchema>)?.duration) * 60000
+									)
+								)}
+							</b>
+						</span>
+					</div>
 				</ConfirmationModal>
 			)}
 			{admin && (
@@ -298,35 +369,37 @@ const ServerModal = () => {
 					handleCloseMenu={handleCloseMenu}
 					items={[
 						{
-							category: 'Player Actions (Coming Soon!)',
+							category: 'Player Actions',
 							items: [
 								{
 									key: 'Kick',
 									description: 'Kick the player from the server',
 									icon: IconBan,
 									color: 'default',
-									onClick: () => setKickPlayer({ ...kickPlayer, open: true }),
+									onClick: () => {
+										setAction('kick')
+										setDetails('')
+									},
 								},
 								{
 									key: 'Ban',
 									description: 'Ban the player from the server for specific time',
 									icon: IconBan,
 									color: 'danger',
-									onClick: () => setBanPlayer({ ...banPlayer, open: true }),
+									onClick: () => {
+										setAction('ban')
+										setDetails({ duration: 0, reason: '' })
+									},
 								},
 								{
 									key: 'Mute',
 									description: 'Mute the player for specific time',
 									icon: IconBan,
 									color: 'danger',
-									onClick: () => toast.error('Coming soon!'),
-								},
-								{
-									key: 'Warn',
-									description: 'Warn the player',
-									icon: IconBan,
-									color: 'warning',
-									onClick: () => toast.error('Coming soon!'),
+									onClick: () => {
+										setAction('mute')
+										setDetails({ duration: 0, reason: '', type: 'MUTE' })
+									},
 								},
 							],
 						},

@@ -1,4 +1,4 @@
-import type { RowDataPacket } from 'mysql2'
+import type { ResultSetHeader, RowDataPacket } from 'mysql2'
 import type { SA_ChatLog } from '@/utils/types/db/plugin'
 import db from '@/utils/lib/Mysql'
 
@@ -14,7 +14,7 @@ const ChatLogs = {
 
 			return rows
 		} catch (err) {
-			console.error(`[DB] Error while getting all chat logs: ${err}`)
+			error(`[DB] Error while getting all chat logs: ${err}`)
 			return []
 		}
 	},
@@ -27,8 +27,24 @@ const ChatLogs = {
 
 			return rows
 		} catch (err) {
-			console.error(`[DB] Error while getting all chat logs: ${err}`)
+			error(`[DB] Error while getting all chat logs: ${err}`)
 			return []
+		}
+	},
+	create: async (props: Partial<SA_ChatLog>) => {
+		const keys = Object.keys(props)
+		const values = Object.values(props)
+
+		try {
+			const [rows] = await db.query<ResultSetHeader>(
+				`INSERT INTO \`sa_chatlogs\` (${keys.join(', ')}) VALUES (${keys.map(() => '?').join(', ')})`,
+				values
+			)
+
+			return rows.insertId
+		} catch (err) {
+			error(`[DB] Error while creating chatLog: ${err}`)
+			return null
 		}
 	},
 }
