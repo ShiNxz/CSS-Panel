@@ -235,7 +235,7 @@ const SoloServer = ({ id, hostname, address }: SA_Server) => {
 								wrapper: 'h-full',
 							}}
 							shadow='md'
-							src='https://files.bo3.gg/uploads/news/16425/title_image/960x480-bc5c4f8a10a0b845105bcab657d4bd58.webp'
+							src={`https://image.gametracker.com/images/maps/160x120/csgo/${map}.jpg`}
 							height='100%'
 							width='100%'
 						/>
