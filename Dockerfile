@@ -7,8 +7,12 @@ FROM base AS deps
 WORKDIR /app
 
 # Install dependencies based on the preferred package manager
-COPY package.json pnpm-lock.yaml* ./
+# COPY package.json pnpm-lock.yaml* ./
 # RUN npm i -g pnpm && pnpm i;
+
+COPY --from=builder --chown=nextjs:nodejs /app/build/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/build/static ./build/static
+
 RUN npm install
 
 # Rebuild the source code only when needed
@@ -45,9 +49,6 @@ RUN adduser --system --uid 1001 nextjs
 RUN chown nextjs:nodejs ./
 # RUN chown nextjs:nodejs ./build
 
-COPY --from=builder --chown=nextjs:nodejs /app/build/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/build/static ./build/static
-
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing
 # COPY --from=builder --chown=nextjs:nodejs /app/build/static ./build/static
@@ -59,6 +60,8 @@ EXPOSE 3000
 ENV PORT 3000
 # set hostname to localhost
 ENV HOSTNAME "0.0.0.0"
+
+RUN "ls -la"
 
 # server.js is created by next build from the standalone output
 # https://nextjs.org/docs/pages/api-reference/next-config-js/output
