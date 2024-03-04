@@ -42,7 +42,7 @@ RUN chown nextjs:nodejs build
 
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing
-COPY --from=builder --chown=nextjs:nodejs /app/build/static ./build/static
+# COPY --from=builder --chown=nextjs:nodejs /app/build/static ./build/static
 
 USER nextjs
 
