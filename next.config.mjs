@@ -16,7 +16,7 @@ const nextConfig = {
 	// 	]
 	// },
 	distDir: 'build',
-	// output: 'standalone',
+	output: 'standalone',
 	images: {
 		remotePatterns: [
 			{
