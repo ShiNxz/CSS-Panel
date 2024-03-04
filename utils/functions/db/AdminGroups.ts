@@ -39,11 +39,13 @@ const Admins = {
 			const keys = Object.keys(props)
 			const values = Object.values(props)
 
+			const newValues = values.map((v) => (Array.isArray(v) ? v.join(',') : v))
+
 			const [rows] = await db.query<ResultSetHeader>(
 				`INSERT INTO \`sa_admins_groups\` (${keys.join(', ')}, created) VALUES (${keys
 					.map(() => '?')
 					.join(', ')}, NOW())`,
-				values
+				newValues
 			)
 
 			return rows.insertId
@@ -57,9 +59,11 @@ const Admins = {
 			const keys = Object.keys(props)
 			const values = Object.values(props)
 
+			const newValues = values.map((v) => (Array.isArray(v) ? v.join(',') : v))
+
 			const [rows] = await db.query<ResultSetHeader>(
 				`UPDATE \`sa_admins_groups\` SET ${keys.map((f) => `${f} = ?`).join(', ')} WHERE id = ?`,
-				[...values, id]
+				[...newValues, id]
 			)
 
 			return rows.affectedRows > 0

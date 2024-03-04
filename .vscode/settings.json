@@ -9,7 +9,7 @@
 		"**/CVS": true,
 		".git": true,
 		".vscode": true,
-		".build": true,
+		"build": true,
 		".next": true,
 		"build/**/*.js": {
 			"when": "$(basename).ts"
