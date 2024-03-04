@@ -51,16 +51,16 @@ COPY --from=builder --chown=nextjs:nodejs /app/build/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/build/static ./build/static
 
 # Make .env file
-RUN echo "NEXT_PUBLIC_API_URL=http://localhost:3000" > .env
+# RUN echo "NEXT_PUBLIC_API_URL=http://localhost:3000" > .env
 
 RUN chown nextjs:nodejs /app/build
-RUN chown nextjs:nodejs /app/.env
+# RUN chown nextjs:nodejs /app/.env
 
 USER nextjs
 
-EXPOSE 3000
+EXPOSE 80
 
-ENV PORT 3000
+ENV PORT 80
 # set hostname to localhost
 ENV HOSTNAME "0.0.0.0"
 
