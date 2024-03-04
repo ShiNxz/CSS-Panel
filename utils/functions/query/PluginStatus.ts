@@ -1,6 +1,6 @@
 import { RCON } from '@fabricio-191/valve-server-query'
 
-const CURRENT_VERSION = process.env.version
+const CURRENT_VERSION = '0.9.7'
 
 /**
  * Get the status of the server **using RCON and the custom plugin command (css_query)**

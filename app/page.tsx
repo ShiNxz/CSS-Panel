@@ -16,10 +16,10 @@ const Home = async () => {
 			<SSRHeader />
 			{serversGrid ? <Servers /> : <ServersTable />}
 			<StatsGrid />
-			{/* <div className='grid grid-cols-2 gap-6'>
+			<div className='grid grid-cols-2 gap-6'>
 				<BansTable type='SMALL' />
 				<MutesTable type='SMALL' />
-			</div> */}
+			</div>
 		</>
 	)
 }
