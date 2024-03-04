@@ -5,6 +5,8 @@ import DiscordWebhook from '../functions/DiscordWebhook'
 global.log = async (message?: any, ...optionalParams: any[]) => {
 	console.log(chalk.cyanBright('[LOG] ') + message, ...optionalParams)
 
+	const params = optionalParams ? optionalParams.map((p) => `\`\`\`${p}\`\`\``) : ''
+
 	const discordWebhook = await query.settings.getByKey('discordWebhook', false)
 	if (discordWebhook)
 		DiscordWebhook({
@@ -13,7 +15,7 @@ global.log = async (message?: any, ...optionalParams: any[]) => {
 				{
 					title: '**▬▬▬▬▬ [LOG] ▬▬▬▬▬**',
 					color: 0x51adff,
-					description: message + '\n' + `\`\`\`${optionalParams.join('\n')}\`\`\``,
+					description: message + params,
 					timestamp: new Date().toISOString(),
 				},
 			],
@@ -34,6 +36,8 @@ global.debug = async (message?: any, ...optionalParams: any[]) => {
 global.error = async (message?: any, ...optionalParams: any[]) => {
 	console.error(chalk.redBright('[ERROR] ') + message, ...optionalParams)
 
+	const params = optionalParams ? optionalParams.map((p) => `\`\`\`${p}\`\`\``) : ''
+
 	const discordWebhook = await query.settings.getByKey('discordWebhook', false)
 	if (discordWebhook)
 		DiscordWebhook({
@@ -42,7 +46,7 @@ global.error = async (message?: any, ...optionalParams: any[]) => {
 				{
 					title: '**▬▬▬▬▬ [ ERROR ] ▬▬▬▬▬**',
 					color: 0xff5151,
-					description: message + '\n' + `\`\`\`${optionalParams.join('\n')}\`\`\``,
+					description: message + params,
 					timestamp: new Date().toISOString(),
 				},
 			],
