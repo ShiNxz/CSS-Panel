@@ -7,11 +7,13 @@ import useAuth from '@/utils/hooks/useAuth'
 import Link from 'next/link'
 import axios from 'axios'
 import toast from 'react-hot-toast'
+import { useRouter } from 'next/navigation'
 
 const UpdateButtonClient = () => {
 	const { admin } = useAuth()
 	const [modal, setModal] = useState(false)
 	const [isLoading, setIsLoading] = useState(false)
+	const router = useRouter()
 
 	const handleUpdate = async () => {
 		setIsLoading(true)
@@ -19,6 +21,7 @@ const UpdateButtonClient = () => {
 		try {
 			await axios.post('/api/update')
 			toast.success('Panel updated successfully!\nRefresh the page to see the changes.')
+			router.refresh()
 		} catch (e) {
 			console.error(e)
 			toast.error('An error occurred while updating the panel.')
@@ -57,7 +60,7 @@ const UpdateButtonClient = () => {
 									>
 										<Button
 											variant='solid'
-											color='primary'
+											color='default'
 											onClick={onClose}
 											isDisabled={isLoading}
 										>

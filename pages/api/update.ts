@@ -5,15 +5,13 @@ const handler: NextApiHandler = async (req, res) => {
 	try {
 		log('Updating the panel...')
 
-		const update = await execPromise('pnpm run update')
-		console.log('update:', update)
+		// const update = await execPromise('pnpm run update')
 
 		const pull = await execPromise('pnpm run pull')
-		console.log('stderr:', pull)
 
 		log('Panel updated!')
 
-		return res.status(200).json({ update, pull })
+		return res.status(200).json({ pull })
 	} catch (e) {
 		error(e)
 
