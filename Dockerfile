@@ -1,11 +1,11 @@
 # Use an official Node runtime as the base image
 FROM node:20 AS base
 
-# Install curl, bash, git, and libc6-compat
-RUN apk add --no-cache curl bash git libc6-compat
-
 # Set the working directory in the container to /app
 WORKDIR /app
+
+# Install curl, bash, git, and libc6-compat
+RUN apt-get update && apt-get install -y curl bash git
 
 # Install pnpm
 RUN curl -f https://get.pnpm.io/v6.16.js | node - add --global pnpm && \
@@ -27,8 +27,7 @@ ENV PORT 3000
 ENV HOSTNAME "0.0.0.0"
 
 # Create a group and user
-RUN addgroup --system --gid 1001 nodejs && \
-    adduser --system --uid 1001 nextjs
+RUN groupadd -r nodejs && useradd -r -g nodejs nextjs
 
 # Change to non-root privilege
 USER nextjs
