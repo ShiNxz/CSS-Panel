@@ -10,7 +10,7 @@
 		"lint": "next lint",
 		"pm2": "pm2 startOrRestart ecosystem.config.js",
 		"update": "git stash push --include-untracked && git stash drop",
-		"pull": "git pull && pnpm pm2"
+		"pull": "git pull"
 	},
 	"dependencies": {
 		"@fabricio-191/valve-server-query": "^4.1.9",
@@ -68,7 +68,6 @@
 		"tailwind-variants": "^0.1.18",
 		"use-debounce": "^10.0.0",
 		"zod": "^3.22.4",
-		"zod-validation-error": "^3.0.0",
 		"zustand": "^4.5.0"
 	},
 	"devDependencies": {

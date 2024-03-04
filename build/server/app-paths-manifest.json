@@ -1,14 +1,9 @@
 {
-  "/_not-found": "app/_not-found.js",
-  "/mutes/page": "app/mutes/page.js",
-  "/bans/page": "app/bans/page.js",
-  "/servers/page": "app/servers/page.js",
   "/page": "app/page.js",
-  "/admin/admins/page": "app/admin/admins/page.js",
-  "/admin/servers/page": "app/admin/servers/page.js",
-  "/admin/bans/page": "app/admin/bans/page.js",
-  "/admin/settings/page": "app/admin/settings/page.js",
-  "/admin/logs/page": "app/admin/logs/page.js",
-  "/admin/mutes/page": "app/admin/mutes/page.js",
-  "/admin/page": "app/admin/page.js"
+  "/servers/page": "app/servers/page.js",
+  "/bans/page": "app/bans/page.js",
+  "/mutes/page": "app/mutes/page.js",
+  "/(main)/admin/admins/page": "app/(main)/admin/admins/page.js",
+  "/(main)/admin/page": "app/(main)/admin/page.js",
+  "/(main)/admin/servers/page": "app/(main)/admin/servers/page.js"
 }
