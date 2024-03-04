@@ -40,6 +40,7 @@ RUN adduser --system --uid 1001 nextjs
 
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/build ./build
+COPY --from=builder /app/node_modules ./node_modules
 
 # Set the correct permission for prerender cache
 # RUN chown nextjs:nodejs /app/build
@@ -58,8 +59,6 @@ EXPOSE 3000
 ENV PORT 3000
 # set hostname to localhost
 ENV HOSTNAME "0.0.0.0"
-
-RUN npm install --frozen-lockfile
 
 # server.js is created by next build from the standalone output
 # https://nextjs.org/docs/pages/api-reference/next-config-js/output
