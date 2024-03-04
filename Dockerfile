@@ -4,12 +4,11 @@ FROM node:20 AS base
 # Set the working directory in the container to /app
 WORKDIR /app
 
-# Install curl, bash, git, and libc6-compat
+# Install curl, bash, git
 RUN apt-get update && apt-get install -y curl bash git
 
 # Install pnpm
-RUN curl -f https://get.pnpm.io/v6.16.js | node - add --global pnpm && \
-    pnpm config set store-dir .pnpm-store
+RUN npm install -g pnpm
 
 # Copy package.json and pnpm-lock.yaml (if available) to the working directory
 COPY package.json pnpm-lock.yaml* ./
