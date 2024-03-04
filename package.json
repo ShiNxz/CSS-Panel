@@ -6,7 +6,7 @@
 	"scripts": {
 		"dev": "next dev",
 		"build": "next build",
-		"start": "node .next/standalone/server.js",
+		"start": "node .build/standalone/server.js",
 		"lint": "next lint",
 		"pm2": "pm2 startOrRestart ecosystem.config.js",
 		"update": "git stash push --include-untracked && git stash drop",
