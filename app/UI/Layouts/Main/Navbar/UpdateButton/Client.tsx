@@ -5,10 +5,27 @@ import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from '@nextu
 import { useState } from 'react'
 import useAuth from '@/utils/hooks/useAuth'
 import Link from 'next/link'
+import axios from 'axios'
+import toast from 'react-hot-toast'
 
 const UpdateButtonClient = () => {
 	const { admin } = useAuth()
 	const [modal, setModal] = useState(false)
+	const [isLoading, setIsLoading] = useState(false)
+
+	const handleUpdate = async () => {
+		setIsLoading(true)
+
+		try {
+			await axios.post('/api/update')
+			toast.success('Panel updated successfully!\nRefresh the page to see the changes.')
+		} catch (e) {
+			console.error(e)
+			toast.error('An error occurred while updating the panel.')
+		}
+
+		setIsLoading(false)
+	}
 
 	return (
 		admin && (
@@ -24,7 +41,7 @@ const UpdateButtonClient = () => {
 				</Button>
 				<Modal
 					isOpen={modal}
-					onOpenChange={setModal}
+					onOpenChange={!isLoading ? setModal : () => {}}
 					placement='top'
 				>
 					<ModalContent>
@@ -42,10 +59,20 @@ const UpdateButtonClient = () => {
 											variant='solid'
 											color='primary'
 											onClick={onClose}
+											isDisabled={isLoading}
 										>
-											Update
+											Documentation
 										</Button>
 									</Link>
+
+									<Button
+										variant='solid'
+										color='primary'
+										onClick={handleUpdate}
+										isLoading={isLoading}
+									>
+										Update
+									</Button>
 								</ModalFooter>
 							</>
 						)}

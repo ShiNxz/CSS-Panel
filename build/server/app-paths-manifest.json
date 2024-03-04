@@ -4,11 +4,11 @@
   "/mutes/page": "app/mutes/page.js",
   "/servers/page": "app/servers/page.js",
   "/page": "app/page.js",
-  "/admin/page": "app/admin/page.js",
+  "/admin/admins/page": "app/admin/admins/page.js",
+  "/admin/mutes/page": "app/admin/mutes/page.js",
   "/admin/logs/page": "app/admin/logs/page.js",
   "/admin/bans/page": "app/admin/bans/page.js",
-  "/admin/servers/page": "app/admin/servers/page.js",
-  "/admin/mutes/page": "app/admin/mutes/page.js",
-  "/admin/admins/page": "app/admin/admins/page.js",
-  "/admin/settings/page": "app/admin/settings/page.js"
+  "/admin/settings/page": "app/admin/settings/page.js",
+  "/admin/page": "app/admin/page.js",
+  "/admin/servers/page": "app/admin/servers/page.js"
 }
