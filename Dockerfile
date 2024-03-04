@@ -8,7 +8,8 @@ WORKDIR /app
 
 # Install dependencies based on the preferred package manager
 COPY package.json pnpm-lock.yaml* ./
-RUN npm i -g pnpm && pnpm i;
+# RUN npm i -g pnpm && pnpm i;
+RUN npm install
 
 # Rebuild the source code only when needed
 FROM base AS builder
@@ -61,4 +62,4 @@ ENV HOSTNAME "0.0.0.0"
 
 # server.js is created by next build from the standalone output
 # https://nextjs.org/docs/pages/api-reference/next-config-js/output
-CMD ["node", "/app/build/standalone/server.js"]
+CMD ["node", "server.js"]
