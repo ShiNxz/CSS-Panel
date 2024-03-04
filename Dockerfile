@@ -11,10 +11,10 @@ RUN apt-get update && apt-get install -y curl bash git
 RUN npm install -g pnpm
 
 # Copy package.json and pnpm-lock.yaml (if available) to the working directory
-COPY package.json pnpm-lock.yaml* ./
+COPY package.json ./
 
 # Install project dependencies
-RUN pnpm install --frozen-lockfile
+RUN pnpm install
 
 # Copy the current directory contents into the container at /app
 COPY . .
