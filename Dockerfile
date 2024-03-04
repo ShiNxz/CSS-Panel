@@ -38,9 +38,9 @@ ENV NEXT_TELEMETRY_DISABLED 1
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/build ./build
-COPY --from=builder /app/node_modules ./node_modules
+# COPY --from=builder /app/public ./public
+# COPY --from=builder /app/build ./build
+# COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/ ./
 
 # Set the correct permission for prerender cache
@@ -54,7 +54,7 @@ COPY --from=builder --chown=nextjs:nodejs /app/build/static ./build/static
 # Make .env file
 # RUN echo "NEXT_PUBLIC_API_URL=http://localhost:3000" > .env
 
-RUN chown nextjs:nodejs /app/build
+RUN chown nextjs:nodejs /app/
 # RUN chown nextjs:nodejs /app/.env
 
 USER nextjs
