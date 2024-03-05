@@ -8,9 +8,8 @@ CSSharp Panel is a web panel for CounterStrikeSharp that includes many features 
 
 ## Important Note
 
-The current way of running the panel is harder for non developers, and the panel is not yet ready for production use, it's still in development and many features are missing, but it's a good start for a panel and it's already usable for some basic features, if you want to help with the development, feel free to join the discord and ask for help or contribute to the project.
-
-I will change the way of running the panel to be easier for non developers in the future, and I will add more features and make the panel ready for production use.
+Running the panel made easier, you can now install the panel locally in a few more ways, and you dont have to build the panel, just install and run it! :)
+Follow the [docs](https://csspanel.dev/docs/quickstart) for more information.
 
 ## Features
 
@@ -20,36 +19,7 @@ I will change the way of running the panel to be easier for non developers in th
 -   📖 **Documentation**: Includes detailed documentation for all the features and function.
 -   📦 **Highly Customizable**: Includes many options for customization to achive the most out of the panel and make it unique to your community, includes support for custom themes and colors with a single click in the admin panel, and even code editors for some of the website parts for 100% customization!
 
-## Install
-
-Clone the repository
-
-```bash
-git clone https://github.com/ShiNxz/CSS-Panel.git
-```
-
-Edit the `.env.example` file and add your database credentials and Steam API key, then rename it to `.env`
-
-Install dependencies
-
-```bash
-pnpm install
-```
-
-Build
-
-```bash
-pnpm build
-```
-
-Start
-
-```bash
-pnpm start
-```
-
-head to `http://localhost:3000` and login with your steam account,
-then head to `http://localhost:3000/admin` and change the panel settings.
+## Getting Started
 
 Detailed installation instructions can be found in the [docs](https://csspanel.dev/docs/quickstart).
 
@@ -69,7 +39,7 @@ Detailed installation instructions can be found in the [docs](https://csspanel.d
 -   [x] Admin Panel - manage the whole panel settings, admins, servers, comms and bans.
     -   [ ] Statistics - show statistics about the panel, such as the amount of admins, servers, comms, bans, etc.
         -   [ ] Plugin: find out a way of count the server entries by the server_id and show it in the statistics.
-			-  [ ] Plugin: for each server give a button that shows a list of all connected players from 2 hours ago.
+            -   [ ] Plugin: for each server give a button that shows a list of all connected players from 2 hours ago.
     -   [x] Logs
     -   [x] Manage Admins
         -   [x] Add, edit, delete admins with the ability to change their permissions.
@@ -93,6 +63,8 @@ Detailed installation instructions can be found in the [docs](https://csspanel.d
         -   [x] Advanced settings - debug mode, early access, etc.
         -   [x] Customization settings - add custom css, js, etc.
         -   [ ] Networks - add different networks like discord, steam, etc. to the panel and add them as a contact method in the panel and footer icons.
+		-	[ ] Custom Pages - add the ability to create custom pages from the admin panel.
+		-	[ ] Custom Menus - add the ability to create custom menus from the admin panel.
 -   [ ] Language support - add the ability to change the panel language from the admin panel, make it possible to create custom languages and add them to the panel through the repo.
 -   [ ] Change the way of running the panel to be easier for non developers, and make the panel ready for production use.
 
