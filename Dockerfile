@@ -42,6 +42,7 @@ RUN adduser --system --uid 1001 nextjs
 # COPY --from=builder /app/build ./build
 # COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/ ./
+RUN chown nextjs:nodejs ./
 
 # Set the correct permission for prerender cache
 # RUN chown nextjs:nodejs /app/build
@@ -59,7 +60,7 @@ RUN chown nextjs:nodejs /app/
 
 USER nextjs
 
-# EXPOSE 80
+EXPOSE 3000
 
 # ENV PORT 3000
 
