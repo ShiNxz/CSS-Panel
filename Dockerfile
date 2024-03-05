@@ -55,9 +55,11 @@ COPY --from=builder --chown=nextjs:nodejs /app/build/static ./build/static
 # Make .env file
 # RUN echo "NEXT_PUBLIC_API_URL=http://localhost:3000" > .env
 
+RUN chown nextjs:nodejs /
 RUN chown nextjs:nodejs /app/
 # RUN chown nextjs:nodejs /app/.env
 
+ENV HOME=/app
 USER nextjs
 
 EXPOSE 3000
