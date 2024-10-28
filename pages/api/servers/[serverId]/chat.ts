@@ -1,5 +1,4 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import type { IExtendedSteamUser } from 'steam-api-sdk/types'
 import { RCON } from '@fabricio-191/valve-server-query'
 import { From64ToUser } from 'steam-api-sdk'
 import isAdminMiddleware from '@/utils/middlewares/isAdminMiddleware'
@@ -51,7 +50,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 				if (typeof hideName !== 'boolean') hideName = false
 
 				const adminUser = await From64ToUser(req.user?.id!)
-				if (!adminUser || !adminUser.length) return res.status(500).send('Error getting admin user')
+				if (!adminUser || !adminUser) return res.status(500).send('Error getting admin user')
 
 				const server = await RCON({
 					ip,
@@ -65,7 +64,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
 				await server.exec(
 					`css_panel_say ${
-						hideName ? '{lime}[ADMIN]' : `{lime} ${adminUser[0].personaname}`
+						hideName ? '{lime}[ADMIN]' : `{lime} ${adminUser.personaname}`
 					}: {default}${message}`
 				)
 
@@ -82,8 +81,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 				await query.chatLogs.create({
 					created,
 					message,
-					playerName: adminUser[0].personaname + ' (Panel)',
-					playerSteam64: adminUser[0].steamid,
+					playerName: `${adminUser.personaname} (Panel)`,
+					playerSteam64: adminUser.steamid,
 					serverId,
 					team: 0,
 				})

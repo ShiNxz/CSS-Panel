@@ -62,24 +62,23 @@ const ServersTable = () => {
 				)
 
 			case 'vac':
-				return (
-					vac !== null &&
-					((
-						<Tooltip
-							content={vac ? 'The server is secured by VAC' : 'Not VAC Secured'}
-							showArrow
+				return vac !== null ? (
+					<Tooltip
+						content={vac ? 'The server is secured by VAC' : 'Not VAC Secured'}
+						showArrow
+					>
+						<Button
+							className='text-default-900/60 data-[hover]:bg-foreground/10 -translate-y-2 translate-x-2'
+							variant='light'
+							radius='full'
+							size='sm'
+							isIconOnly
 						>
-							<Button
-								className='text-default-900/60 data-[hover]:bg-foreground/10 -translate-y-2 translate-x-2'
-								variant='light'
-								radius='full'
-								size='sm'
-								isIconOnly
-							>
-								{vac ? <IconShield size={20} /> : <IconShieldX />}
-							</Button>
-						</Tooltip>
-					) || <></>)
+							{vac ? <IconShield size={20} /> : <IconShieldX />}
+						</Button>
+					</Tooltip>
+				) : (
+					<></>
 				)
 
 			case 'actions':
